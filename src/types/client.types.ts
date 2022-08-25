@@ -1,11 +1,12 @@
 import { Model, Schema } from "mongoose";
+import { OrderDocumentInterface } from "./order.types";
 export interface ClientSchemaInterface {
   name: string;
   cellphone: string;
   nit: string;
   email: string;
   bill: string;
-  orders: [] | null;
+  orders: OrderDocumentInterface[] | null;
   //createdBy: Schema.Types.ObjectId;
 }
 

@@ -1,4 +1,4 @@
-import { Date } from "mongoose";
+import { Date, Model } from "mongoose";
 
 export interface OrderSchemaInterface {
   order_id: number;
@@ -11,3 +11,5 @@ export interface OrderSchemaInterface {
 export interface OrderDocumentInterface
   extends OrderSchemaInterface,
     Document {}
+
+export interface OrderModelInterface extends Model<OrderDocumentInterface> {}

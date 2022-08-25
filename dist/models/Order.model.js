@@ -9,3 +9,4 @@ exports.orderSchema = new mongoose_1.Schema({
     total: { type: Number, required: true },
     date: { type: Date, required: true },
 });
+exports.default = (0, mongoose_1.model)("order", exports.orderSchema);

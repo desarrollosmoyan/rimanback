@@ -6,7 +6,7 @@ import {
 import { orderSchema } from "./Order.model";
 import { userSchema } from "./User.model";
 
-export const clientSchema: any = new Schema<ClientDocumentInterface>({
+export const clientSchema = new Schema<ClientDocumentInterface>({
   name: { type: String, required: true },
   cellphone: { type: String, required: true },
   nit: { type: String, required: true, unique: true },

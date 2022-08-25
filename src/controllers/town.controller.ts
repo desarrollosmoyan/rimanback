@@ -3,10 +3,17 @@ import ClientModel from "../models/Client.model";
 import TownModel from "../models/Town.model";
 import { isEmpty } from "../utils";
 
-const createTown = async (req: Request, Res: Response) => {
+export const createTown = async (req: Request, res: Response) => {
   try {
     const townData = req.body;
-  } catch (error) {}
+    if (isEmpty(townData)) {
+      return res.status(401).send({ message: "Your request is empty" });
+    }
+    const newTown = new TownModel(townData);
+    res.status(200).send(newTown);
+  } catch (error) {
+    res.status(400).send({ message: "Can't create a town" });
+  }
 };
 
 export const createClientByTown = async (req: Request, res: Response) => {

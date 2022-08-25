@@ -12,16 +12,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createClientByTown = void 0;
+exports.createClientByTown = exports.createTown = void 0;
 const Client_model_1 = __importDefault(require("../models/Client.model"));
 const Town_model_1 = __importDefault(require("../models/Town.model"));
 const utils_1 = require("../utils");
-const createTown = (req, Res) => __awaiter(void 0, void 0, void 0, function* () {
+const createTown = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const townData = req.body;
+        if ((0, utils_1.isEmpty)(townData)) {
+            return res.status(401).send({ message: "Your request is empty" });
+        }
+        const newTown = new Town_model_1.default(townData);
+        res.status(200).send(newTown);
     }
-    catch (error) { }
+    catch (error) {
+        res.status(400).send({ message: "Can't create a town" });
+    }
 });
+exports.createTown = createTown;
 const createClientByTown = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
