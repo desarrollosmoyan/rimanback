@@ -5,7 +5,7 @@ import { orderSchema } from "./Order.model";
 export const clientSchema = new Schema<ClientDocumentInterface>({
   name: { type: String, required: true },
   cellphone: { type: String, required: true },
-  nit: { type: String, required: true },
+  nit: { type: String, required: true, unique: true },
   bill: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   orders: [orderSchema],
