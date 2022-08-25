@@ -4,6 +4,7 @@ export interface UserSchemaInterface {
   email: string;
   password: string;
   route: RouteSchemaInterface;
+  expenses: number;
 }
 
 export interface UserDocumentInterface extends UserSchemaInterface, Document {}

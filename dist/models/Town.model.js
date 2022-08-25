@@ -7,3 +7,4 @@ exports.townSchema = new mongoose_1.Schema({
     name: { type: String, required: true },
     clients: [Client_model_1.clientSchema],
 });
+exports.default = (0, mongoose_1.model)("town", exports.townSchema);
