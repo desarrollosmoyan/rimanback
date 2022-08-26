@@ -1,8 +1,9 @@
 import { Model } from "mongoose";
+import { TownDocumentInterface } from "./town.types";
 
 export interface RouteSchemaInterface {
   name: string;
-  towns: [];
+  towns: TownDocumentInterface[];
 }
 export interface RouteDocumentInterface
   extends RouteSchemaInterface,
