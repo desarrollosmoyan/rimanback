@@ -23,19 +23,14 @@ const OrderModel = model<OrderDocumentInterface, OrderModelInterface>(
   orderSchema
 );
 
-orderSchema.pre("save", function (next) {
+orderSchema.pre("save", async function (next) {
   const doc = this;
-  OrderModel.findByIdAndUpdate(
-    { _id: "entityId" },
-    { $inc: { order_id: 1 } },
-    (error, orderId) => {
-      if (error) {
-        return next(error);
-      }
-      if (doc.order_id && orderId) {
-        doc.order_id = orderId.order_id;
-      }
-    }
-  );
+  const lastId = (await OrderModel.find({})).length;
+  if (lastId == 0) {
+    doc.order_id = 0;
+    return next();
+  }
+  doc.order_id = lastId + 1;
+  next();
 });
 export default OrderModel;

@@ -10,7 +10,7 @@ const expenseSchema = new Schema<ExpenseDocumentInterface>({
       "comidas",
       "A.C.P.M",
       "peajes",
-      "hotel-y-Parqueadero",
+      "hotel-y-parqueadero",
       "gastos-varios",
       "scouth",
       "vinipel",
