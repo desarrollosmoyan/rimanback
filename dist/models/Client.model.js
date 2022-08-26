@@ -6,9 +6,11 @@ const Order_model_1 = require("./Order.model");
 exports.clientSchema = new mongoose_1.Schema({
     name: { type: String, required: true },
     cellphone: { type: String, required: true },
-    nit: { type: String, required: true, unique: true },
-    bill: { type: String, required: true, unique: true },
-    email: { type: String, required: true, unique: true },
+    nit: { type: String, required: true },
+    bill: { type: String, required: true },
+    email: {
+        type: String,
+    },
     orders: [Order_model_1.orderSchema],
     /*createdBy: {
       type: Schema.Types.ObjectId,

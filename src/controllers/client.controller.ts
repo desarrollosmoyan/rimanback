@@ -27,7 +27,8 @@ export const createNewClient = async (req: Request, res: Response) => {
       .status(200)
       .json({ message: "Client created successfuly", client: saveClient });
   } catch (error: any) {
-    res.status(400).send(error);
+    console.log(error);
+    res.status(400).send({ message: "Seem like some information exist yet" });
   }
 };
 

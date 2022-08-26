@@ -4,14 +4,15 @@ import {
   ClientModelInterface,
 } from "../types/client.types";
 import { orderSchema } from "./Order.model";
-import { userSchema } from "./User.model";
 
 export const clientSchema = new Schema<ClientDocumentInterface>({
   name: { type: String, required: true },
   cellphone: { type: String, required: true },
-  nit: { type: String, required: true, unique: true },
-  bill: { type: String, required: true, unique: true },
-  email: { type: String, required: true, unique: true },
+  nit: { type: String, required: true },
+  bill: { type: String, required: true },
+  email: {
+    type: String,
+  },
   orders: [orderSchema],
   /*createdBy: {
     type: Schema.Types.ObjectId,

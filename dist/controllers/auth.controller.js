@@ -17,17 +17,20 @@ const User_model_1 = __importDefault(require("../models/User.model"));
 const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password } = req.body;
+        console.log(req.body);
         const newUser = new User_model_1.default({
             email,
             password,
         });
-        const saveUser = yield newUser.save();
+        console.log(newUser);
+        yield newUser.save();
         return res.status(200).send({
             message: "User created successfuly",
-            user: Object.assign({}, saveUser),
+            user: Object.assign({}, newUser),
         });
     }
     catch (error) {
+        console.log(error);
         return res.status(400).json({ message: "Can't create user" });
     }
 });

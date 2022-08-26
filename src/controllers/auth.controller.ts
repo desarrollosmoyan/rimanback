@@ -3,18 +3,21 @@ import UserModel from "../models/User.model";
 export const signup = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
+    console.log(req.body);
     const newUser = new UserModel({
       email,
       password,
     });
-    const saveUser = await newUser.save();
+    console.log(newUser);
+    await newUser.save();
     return res.status(200).send({
       message: "User created successfuly",
       user: {
-        ...saveUser,
+        ...newUser,
       },
     });
   } catch (error: any) {
+    console.log(error);
     return res.status(400).json({ message: "Can't create user" });
   }
 };

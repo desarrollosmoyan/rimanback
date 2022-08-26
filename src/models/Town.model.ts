@@ -4,7 +4,7 @@ import { clientSchema } from "./Client.model";
 
 export const townSchema = new Schema<TownDocumentInterface>({
   name: { type: String, required: true },
-  clients: [clientSchema],
+  clients: { type: [clientSchema], index: true, default: [] },
 });
 
 export default model<TownDocumentInterface, TownModelInterface>(

@@ -3,10 +3,10 @@ import { UserDocumentInterface, UserModelInterface } from "../types/user.types";
 import { routeSchema } from "./Route.model";
 
 export const userSchema = new Schema<UserDocumentInterface>({
-  email: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  route: routeSchema,
-  expenses: { type: Number, required: true },
+  route: { type: routeSchema, required: true },
+  //expenses: { type: Number },
 });
 userSchema.statics.comparePassword = (
   password: string,

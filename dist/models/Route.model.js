@@ -5,5 +5,6 @@ const mongoose_1 = require("mongoose");
 const Town_model_1 = require("./Town.model");
 exports.routeSchema = new mongoose_1.Schema({
     name: { type: String, required: true },
-    towns: [Town_model_1.townSchema],
+    towns: { type: [Town_model_1.townSchema], required: true, default: [] },
 });
+exports.default = (0, mongoose_1.model)("route", exports.routeSchema);

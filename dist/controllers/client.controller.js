@@ -42,7 +42,8 @@ const createNewClient = (req, res) => __awaiter(void 0, void 0, void 0, function
             .json({ message: "Client created successfuly", client: saveClient });
     }
     catch (error) {
-        res.status(400).send(error);
+        console.log(error);
+        res.status(400).send({ message: "Seem like some information exist yet" });
     }
 });
 exports.createNewClient = createNewClient;
