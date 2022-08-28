@@ -8,6 +8,8 @@ import { orderRouter } from "./routes/order.route";
 import routeRouter from "./routes/route.route";
 import townRouter from "./routes/town.route";
 import turnRouter from "./routes/turn.route";
+import paymentRouter from "./routes/payment.route";
+import expenseRouter from "./routes/expense.route";
 const server = express();
 const port = process.env.PORT || 5000;
 
@@ -21,6 +23,8 @@ server.use("/order", orderRouter);
 server.use("/route", routeRouter);
 server.use("/town", townRouter);
 server.use("/turn", turnRouter);
+server.use("/expense", expenseRouter);
+server.use("/payment", paymentRouter);
 
 server.listen(port, () => {
   console.log(`Server listening on ${port}`);
