@@ -5,7 +5,7 @@ export interface ClientSchemaInterface {
   cellphone: string;
   nit: string;
   email: string;
-  bill: string;
+  bill: boolean;
   orders: Types.ObjectId[] | undefined;
   town_id: Types.ObjectId | undefined;
   //createdBy: Schema.Types.ObjectId;

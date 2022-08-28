@@ -8,19 +8,17 @@ export const createOrder = async (req: Request, res: Response) => {
     const { id } = req.params;
     const orderData = req.body;
     if (isEmpty(orderData) || !id) {
-      return res.status(401).send({ message: "Can't create a order" });
+      return res.status(401).send({ message: "Rellene los campos" });
     }
     const currentClient = await ClientModel.findById(id);
 
     if (!currentClient) {
-      return res.status(401).send({ message: "Client not found" });
+      return res.status(401).send({ message: "Client no encontrado" });
     }
-    const orderId = (await OrderModel.find({}).exec()).length + 1;
     const date = Date.now();
 
     const newOrder = new OrderModel({
       ...orderData,
-      order_id: orderId,
       date: date,
     });
     await newOrder.save();
@@ -29,13 +27,8 @@ export const createOrder = async (req: Request, res: Response) => {
       await currentClient.save();
       return res
         .status(200)
-        .send({ message: "Order created successfuly", order: newOrder });
+        .send({ message: "Pedido creado exitosamente", order: newOrder });
     }
-    currentClient.orders = [newOrder._id];
-    await currentClient.save();
-    res
-      .status(200)
-      .send({ message: "Order created successfuly", order: newOrder });
   } catch (error) {
     res.status(400).send({ message: "Error" });
     console.log(error);
@@ -47,9 +40,12 @@ export const getAllOrders = async (req: Request, res: Response) => {
     const { id } = req.params;
     const client = await ClientModel.findById(id);
     if (!client) {
-      return res.status(401).send({ message: "Client not found" });
+      return res.status(401).send({ message: "Cliente no encontrado" });
     }
-    res.status(200).send(client.orders);
+    const clientOrders = await client.populate({
+      path: "orders",
+    });
+    res.status(200).send({ orders: clientOrders.orders });
   } catch (error) {
     res.status(400).send({ message: "error" });
   }

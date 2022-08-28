@@ -7,7 +7,7 @@ import { townSchema } from "./Town.model";
 
 export const routeSchema = new Schema<RouteDocumentInterface>({
   name: { type: String, required: true },
-  towns: [{ type: Types.ObjectId, required: true, ref: "town" }],
+  towns: [{ type: Types.ObjectId, required: true, ref: "towns" }],
   user_id: { type: Types.ObjectId, ref: "user" },
 });
 

@@ -55,31 +55,24 @@ const createNewClientByTown = (req, res) => __awaiter(void 0, void 0, void 0, fu
     try {
         const { id } = req.params;
         if ((0, utils_1.isEmpty)(req.body)) {
-            return res.status(401).send({ message: "Request body can't be " });
+            return res.status(400).send({ message: "Por favor, rellena los campos" });
         }
-        const { email, orders, name, nit, cellphone, bill } = req.body;
-        const saveClient = new Client_model_1.default({
-            name,
-            email,
-            orders,
-            nit,
-            cellphone,
-            bill,
-        });
+        const clientData = req.body;
         const currentTown = yield Town_model_1.default.findById(id);
         if (!currentTown) {
             return res.status(404).send({ message: "Current town doesnt exist" });
         }
+        const saveClient = new Client_model_1.default(Object.assign(Object.assign({}, clientData), { town_id: currentTown._id }));
         currentTown.clients = [...currentTown.clients, saveClient._id];
         yield saveClient.save();
         yield currentTown.save();
         res
             .status(200)
-            .json({ message: "Client created successfuly", client: saveClient });
+            .json({ message: "Cliente creado exitosamente", client: saveClient });
     }
     catch (error) {
         console.log(error);
-        res.status(400).send({ message: "Seem like some information exist yet" });
+        res.status(400).send({ message: "Seem like some information exist yet" }); // ->
     }
 });
 exports.createNewClientByTown = createNewClientByTown;

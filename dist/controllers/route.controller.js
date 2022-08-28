@@ -21,10 +21,9 @@ const createRoute = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const { id } = req.params;
         const routeData = req.body;
         if ((0, utils_1.isEmpty)(routeData)) {
-            return res.status(401).send({ message: "Can't create route" });
+            return res.status(400).send({ message: "Can't create route" });
         }
         const currentUser = yield User_model_1.default.findById(id);
-        console.log(currentUser);
         if (!currentUser) {
             return res.status(200).send({ message: "Can't found user" });
         }

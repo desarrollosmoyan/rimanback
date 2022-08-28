@@ -21,28 +21,22 @@ const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const { id } = req.params;
         const orderData = req.body;
         if ((0, utils_1.isEmpty)(orderData) || !id) {
-            return res.status(401).send({ message: "Can't create a order" });
+            return res.status(401).send({ message: "Rellene los campos" });
         }
         const currentClient = yield Client_model_1.default.findById(id);
         if (!currentClient) {
-            return res.status(401).send({ message: "Client not found" });
+            return res.status(401).send({ message: "Client no encontrado" });
         }
-        const orderId = (yield Order_model_1.default.find({}).exec()).length + 1;
         const date = Date.now();
-        const newOrder = new Order_model_1.default(Object.assign(Object.assign({}, orderData), { order_id: orderId, date: date }));
+        const newOrder = new Order_model_1.default(Object.assign(Object.assign({}, orderData), { date: date }));
         yield newOrder.save();
         if (currentClient.orders) {
             currentClient.orders = [...currentClient.orders, newOrder._id];
             yield currentClient.save();
             return res
                 .status(200)
-                .send({ message: "Order created successfuly", order: newOrder });
+                .send({ message: "Pedido creado exitosamente", order: newOrder });
         }
-        currentClient.orders = [newOrder._id];
-        yield currentClient.save();
-        res
-            .status(200)
-            .send({ message: "Order created successfuly", order: newOrder });
     }
     catch (error) {
         res.status(400).send({ message: "Error" });
@@ -55,9 +49,12 @@ const getAllOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         const { id } = req.params;
         const client = yield Client_model_1.default.findById(id);
         if (!client) {
-            return res.status(401).send({ message: "Client not found" });
+            return res.status(401).send({ message: "Cliente no encontrado" });
         }
-        res.status(200).send(client.orders);
+        const clientOrders = yield client.populate({
+            path: "orders",
+        });
+        res.status(200).send({ orders: clientOrders.orders });
     }
     catch (error) {
         res.status(400).send({ message: "error" });

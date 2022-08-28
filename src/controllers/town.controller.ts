@@ -10,7 +10,7 @@ export const createTown = async (req: Request, res: Response) => {
     const arrTowns = req.body;
     console.log(arrTowns);
     if (isEmpty(arrTowns)) {
-      return res.status(401).send({ message: "Your request is empty" });
+      return res.status(400).send({ message: "Your request is empty" });
     }
     const currentRoute = await RouteModel.findById(id);
     if (!currentRoute) {
@@ -22,9 +22,7 @@ export const createTown = async (req: Request, res: Response) => {
     const l = arrOfModels.map((model: any) => {
       return model.save();
     });
-    await Promise.all(l)
-      .then((model: any) => console.log("Promesa concluida"))
-      .catch((err) => console.log(err));
+    await Promise.all(l);
     if (currentRoute.towns) {
       currentRoute.towns = [...currentRoute.towns, ...arrOfModels];
       await currentRoute.save();

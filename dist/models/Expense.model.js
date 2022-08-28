@@ -20,6 +20,7 @@ exports.expenseSchema = new mongoose_1.Schema({
             "otro",
         ],
     },
+    amount: { type: Number, required: true },
     date: { type: Date, required: true },
 });
 exports.default = (0, mongoose_1.model)("expense", exports.expenseSchema);

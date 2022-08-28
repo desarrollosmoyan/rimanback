@@ -1,5 +1,8 @@
 import { model, Schema } from "mongoose";
-import { ExpenseDocumentInterface } from "../types/expense.types";
+import {
+  ExpenseDocumentInterface,
+  ExpenseModelInterface,
+} from "../types/expense.types";
 
 export const expenseSchema = new Schema<ExpenseDocumentInterface>({
   type: {
@@ -19,10 +22,11 @@ export const expenseSchema = new Schema<ExpenseDocumentInterface>({
       "otro",
     ],
   },
+  amount: { type: Number, required: true },
   date: { type: Date, required: true },
 });
 
-export default model<ExpenseDocumentInterface, ExpenseDocumentInterface>(
+export default model<ExpenseDocumentInterface, ExpenseModelInterface>(
   "expense",
   expenseSchema
 );

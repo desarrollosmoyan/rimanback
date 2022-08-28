@@ -8,10 +8,9 @@ export const createRoute = async (req: Request, res: Response) => {
     const { id } = req.params;
     const routeData = req.body;
     if (isEmpty(routeData)) {
-      return res.status(401).send({ message: "Can't create route" });
+      return res.status(400).send({ message: "Can't create route" });
     }
     const currentUser = await UserModel.findById(id);
-    console.log(currentUser);
     if (!currentUser) {
       return res.status(200).send({ message: "Can't found user" });
     }

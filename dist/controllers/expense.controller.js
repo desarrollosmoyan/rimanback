@@ -12,32 +12,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllPayments = exports.createPayment = void 0;
+exports.createExpense = void 0;
+const Expense_model_1 = __importDefault(require("../models/Expense.model"));
+const Turn_model_1 = __importDefault(require("../models/Turn.model"));
 const utils_1 = require("../utils");
-const Payment_model_1 = __importDefault(require("../models/Payment.model"));
-const Order_model_1 = __importDefault(require("../models/Order.model"));
-const createPayment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const createExpense = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
         if ((0, utils_1.isEmpty)(req.body)) {
-            return res.json(400).send({ message: "Body is empty" });
+            return res.status(400).send({ message: "Por favor, rellene los campos" });
         }
-        const currentOrder = yield Order_model_1.default.findById(id);
-        if (!currentOrder) {
-            return res.status(404).send({ message: "Can't find order" });
+        const currentTurn = yield Turn_model_1.default.findById(id);
+        if (!currentTurn) {
+            return res.status(404).send({ message: "Turno no encontrado" });
         }
-        const newPayment = new Payment_model_1.default(req.body);
-        currentOrder.payments = [...currentOrder.payments, newPayment];
-        yield currentOrder.save();
+        const newExpense = new Expense_model_1.default(req.body);
+        currentTurn.expenses = [...currentTurn.expenses, newExpense];
+        yield currentTurn.save();
+        res.status(200).send({ message: "Gasto creado con éxito" });
     }
     catch (error) {
-        res.status(404).send({ message: "error" });
+        res.status(400).send(error);
     }
 });
-exports.createPayment = createPayment;
-const getAllPayments = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-    }
-    catch (err) { }
-});
-exports.getAllPayments = getAllPayments;
+exports.createExpense = createExpense;
