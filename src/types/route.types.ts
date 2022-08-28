@@ -1,9 +1,10 @@
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 import { TownDocumentInterface } from "./town.types";
 
 export interface RouteSchemaInterface {
   name: string;
-  towns: TownDocumentInterface[];
+  towns: Types.ObjectId[] | undefined;
+  user_id: Types.ObjectId | undefined;
 }
 export interface RouteDocumentInterface
   extends RouteSchemaInterface,

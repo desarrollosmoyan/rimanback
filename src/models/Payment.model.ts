@@ -4,7 +4,7 @@ import {
   PaymentModelInterface,
 } from "../types/payment.types";
 
-const paymentSchema = new Schema<PaymentDocumentInterface>({
+export const paymentSchema = new Schema<PaymentDocumentInterface>({
   paymentMethod: { type: String, required: true },
   amount: { type: Number, required: true },
 });

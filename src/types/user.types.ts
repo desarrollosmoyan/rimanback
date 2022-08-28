@@ -1,10 +1,10 @@
-import { Model, Schema } from "mongoose";
+import { Model, Mongoose, Schema, Types } from "mongoose";
 import { RouteSchemaInterface } from "./route.types";
 export interface UserSchemaInterface {
   email: string;
   password: string;
-  route: RouteSchemaInterface;
-  expenses: number;
+  route: Types.ObjectId | undefined;
+  currentTurn: Types.ObjectId | undefined;
 }
 
 export interface UserDocumentInterface extends UserSchemaInterface, Document {}

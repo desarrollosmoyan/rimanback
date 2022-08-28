@@ -1,9 +1,10 @@
 import { model, Schema } from "mongoose";
 import { ExpenseDocumentInterface } from "../types/expense.types";
 
-const expenseSchema = new Schema<ExpenseDocumentInterface>({
+export const expenseSchema = new Schema<ExpenseDocumentInterface>({
   type: {
     type: [String],
+    default: ["otro"],
     enum: [
       "almuerzo",
       "desayuno",

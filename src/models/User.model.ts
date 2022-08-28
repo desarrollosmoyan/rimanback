@@ -1,12 +1,12 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Types } from "mongoose";
 import { UserDocumentInterface, UserModelInterface } from "../types/user.types";
 import { routeSchema } from "./Route.model";
 
 export const userSchema = new Schema<UserDocumentInterface>({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  route: { type: routeSchema, required: true },
-  //expenses: { type: Number },
+  route: { type: Types.ObjectId, ref: "route" },
+  currentTurn: { type: Types.ObjectId, ref: "turn" },
 });
 userSchema.statics.comparePassword = (
   password: string,

@@ -25,15 +25,13 @@ export const createOrder = async (req: Request, res: Response) => {
     });
     await newOrder.save();
     if (currentClient.orders) {
-      currentClient.orders = [...currentClient.orders, newOrder];
+      currentClient.orders = [...currentClient.orders, newOrder._id];
       await currentClient.save();
       return res
         .status(200)
         .send({ message: "Order created successfuly", order: newOrder });
     }
-    currentClient.orders = [
-      new OrderModel({ ...orderData, date: date, order_id: orderId }),
-    ];
+    currentClient.orders = [newOrder._id];
     await currentClient.save();
     res
       .status(200)

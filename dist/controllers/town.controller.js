@@ -12,46 +12,40 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createClientByTown = exports.createTown = void 0;
-const Client_model_1 = __importDefault(require("../models/Client.model"));
+exports.createTown = void 0;
 const Town_model_1 = __importDefault(require("../models/Town.model"));
 const utils_1 = require("../utils");
+const Route_model_1 = __importDefault(require("../models/Route.model"));
 const createTown = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const townData = req.body;
-        if ((0, utils_1.isEmpty)(townData)) {
+        const { id } = req.params;
+        const arrTowns = req.body;
+        console.log(arrTowns);
+        if ((0, utils_1.isEmpty)(arrTowns)) {
             return res.status(401).send({ message: "Your request is empty" });
         }
-        const newTown = new Town_model_1.default(townData);
-        res.status(200).send(newTown);
+        const currentRoute = yield Route_model_1.default.findById(id);
+        if (!currentRoute) {
+            return res.status(400).send({ message: "Route not found" });
+        }
+        const arrOfModels = arrTowns.map((town) => {
+            return new Town_model_1.default(Object.assign(Object.assign({}, town), { route_id: id }));
+        });
+        const l = arrOfModels.map((model) => {
+            return model.save();
+        });
+        yield Promise.all(l)
+            .then((model) => console.log("Promesa concluida"))
+            .catch((err) => console.log(err));
+        if (currentRoute.towns) {
+            currentRoute.towns = [...currentRoute.towns, ...arrOfModels];
+            yield currentRoute.save();
+        }
+        res.status(200).send(arrOfModels);
     }
     catch (error) {
+        console.log(error);
         res.status(400).send({ message: "Can't create a town" });
     }
 });
 exports.createTown = createTown;
-const createClientByTown = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { id } = req.params;
-        const { name, cellphone, nit, bill, email, orders } = req.body;
-        if ((0, utils_1.isEmpty)(req.body)) {
-            return res.status(401).send({ message: "Your request is empty" });
-        }
-        const currentTown = yield Town_model_1.default.findById(id);
-        const newClient = new Client_model_1.default({
-            name,
-            cellphone,
-            nit,
-            bill,
-            email,
-            orders,
-        });
-        if (currentTown) {
-            currentTown.clients = [...currentTown.clients, newClient];
-        }
-    }
-    catch (error) {
-        res.status(400).send({ message: "Can't create a client in this town" });
-    }
-});
-exports.createClientByTown = createClientByTown;

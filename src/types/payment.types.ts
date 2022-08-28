@@ -1,4 +1,5 @@
 import { Model } from "mongoose";
+
 export interface PaymentSchemaInterface {
   paymentMethod:
     | "efectivo"

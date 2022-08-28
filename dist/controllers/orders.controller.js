@@ -32,15 +32,13 @@ const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const newOrder = new Order_model_1.default(Object.assign(Object.assign({}, orderData), { order_id: orderId, date: date }));
         yield newOrder.save();
         if (currentClient.orders) {
-            currentClient.orders = [...currentClient.orders, newOrder];
+            currentClient.orders = [...currentClient.orders, newOrder._id];
             yield currentClient.save();
             return res
                 .status(200)
                 .send({ message: "Order created successfuly", order: newOrder });
         }
-        currentClient.orders = [
-            new Order_model_1.default(Object.assign(Object.assign({}, orderData), { date: date, order_id: orderId })),
-        ];
+        currentClient.orders = [newOrder._id];
         yield currentClient.save();
         res
             .status(200)

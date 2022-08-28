@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, Types } from "mongoose";
 import {
   RouteDocumentInterface,
   RouteModelInterface,
@@ -7,7 +7,8 @@ import { townSchema } from "./Town.model";
 
 export const routeSchema = new Schema<RouteDocumentInterface>({
   name: { type: String, required: true },
-  towns: { type: [townSchema], required: true, default: [] },
+  towns: [{ type: Types.ObjectId, required: true, ref: "town" }],
+  user_id: { type: Types.ObjectId, ref: "user" },
 });
 
 export default model<RouteDocumentInterface, RouteModelInterface>(

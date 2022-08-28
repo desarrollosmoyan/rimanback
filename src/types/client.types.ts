@@ -1,4 +1,4 @@
-import { Model, Schema } from "mongoose";
+import { Model, Schema, Types } from "mongoose";
 import { OrderDocumentInterface } from "./order.types";
 export interface ClientSchemaInterface {
   name: string;
@@ -6,7 +6,8 @@ export interface ClientSchemaInterface {
   nit: string;
   email: string;
   bill: string;
-  orders: OrderDocumentInterface[] | null;
+  orders: Types.ObjectId[] | undefined;
+  town_id: Types.ObjectId | undefined;
   //createdBy: Schema.Types.ObjectId;
 }
 

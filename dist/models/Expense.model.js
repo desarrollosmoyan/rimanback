@@ -1,9 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.expenseSchema = void 0;
 const mongoose_1 = require("mongoose");
-const expenseSchema = new mongoose_1.Schema({
+exports.expenseSchema = new mongoose_1.Schema({
     type: {
         type: [String],
+        default: ["otro"],
         enum: [
             "almuerzo",
             "desayuno",
@@ -20,4 +22,4 @@ const expenseSchema = new mongoose_1.Schema({
     },
     date: { type: Date, required: true },
 });
-exports.default = (0, mongoose_1.model)("expense", expenseSchema);
+exports.default = (0, mongoose_1.model)("expense", exports.expenseSchema);

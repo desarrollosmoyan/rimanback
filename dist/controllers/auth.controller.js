@@ -26,7 +26,9 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         yield newUser.save();
         return res.status(200).send({
             message: "User created successfuly",
-            user: Object.assign({}, newUser),
+            user: {
+                newUser,
+            },
         });
     }
     catch (error) {

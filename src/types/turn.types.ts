@@ -1,9 +1,14 @@
 import { UserDocumentInterface } from "./user.types";
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
+import { OrderSchemaInterface } from "./order.types";
+import { ExpenseSchemaInterface } from "./expense.types";
 export interface TurnSchemaInterface {
+  turn_id: number;
   startDate: Date;
   endDate: Date;
-  user: UserDocumentInterface;
+  user: Types.ObjectId | undefined;
+  orders: OrderSchemaInterface[];
+  expenses: ExpenseSchemaInterface[];
 }
 export interface TurnDocumentInterface extends TurnSchemaInterface, Document {}
 
