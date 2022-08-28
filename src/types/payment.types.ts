@@ -1,11 +1,18 @@
+import { Model } from "mongoose";
+
 export interface PaymentSchemaInterface {
-  name: string;
-  cellphone: string;
-  nit: string;
-  email: string;
-  orders: [];
+  paymentMethod:
+    | "efectivo"
+    | "nequi-personal"
+    | "nequi-empresa"
+    | "bancolombia-personal"
+    | "bancolombia-empresa";
+  amount: number;
 }
 
 export interface PaymentDocumentInterface
   extends PaymentSchemaInterface,
     Document {}
+
+export interface PaymentModelInterface
+  extends Model<PaymentDocumentInterface> {}

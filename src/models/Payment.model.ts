@@ -1,4 +1,15 @@
-import { Schema } from "mongoose";
-import { PaymentDocumentInterface } from "../types/payment.types";
+import { Schema, model } from "mongoose";
+import {
+  PaymentDocumentInterface,
+  PaymentModelInterface,
+} from "../types/payment.types";
 
-const paymentSchema = new Schema<PaymentDocumentInterface>({});
+export const paymentSchema = new Schema<PaymentDocumentInterface>({
+  paymentMethod: { type: String, required: true },
+  amount: { type: Number, required: true },
+});
+
+export default model<PaymentDocumentInterface, PaymentModelInterface>(
+  "payment",
+  paymentSchema
+);

@@ -4,6 +4,10 @@ import connectDB from "./utils/connectDB";
 import routers from "./routes/index";
 import authRouter from "./routes/auth.route";
 import clientRouter from "./routes/client.route";
+import { orderRouter } from "./routes/order.route";
+import routeRouter from "./routes/route.route";
+import townRouter from "./routes/town.route";
+import turnRouter from "./routes/turn.route";
 const server = express();
 const port = process.env.PORT || 5000;
 
@@ -13,6 +17,10 @@ server.use(express.urlencoded({ extended: false }));
 
 server.use("/auth", authRouter);
 server.use("/client", clientRouter);
+server.use("/order", orderRouter);
+server.use("/route", routeRouter);
+server.use("/town", townRouter);
+server.use("/turn", turnRouter);
 
 server.listen(port, () => {
   console.log(`Server listening on ${port}`);

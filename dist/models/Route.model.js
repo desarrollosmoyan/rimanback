@@ -2,8 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.routeSchema = void 0;
 const mongoose_1 = require("mongoose");
-const Town_model_1 = require("./Town.model");
 exports.routeSchema = new mongoose_1.Schema({
     name: { type: String, required: true },
-    towns: [Town_model_1.townSchema],
+    towns: [{ type: mongoose_1.Types.ObjectId, required: true, ref: "towns" }],
+    user_id: { type: mongoose_1.Types.ObjectId, ref: "user" },
 });
+exports.default = (0, mongoose_1.model)("route", exports.routeSchema);

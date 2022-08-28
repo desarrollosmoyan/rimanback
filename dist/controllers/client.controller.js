@@ -12,8 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateClient = exports.createNewClient = exports.getAllClients = void 0;
+exports.updateClient = exports.createNewClientByTown = exports.createNewClient = exports.getAllClients = void 0;
 const Client_model_1 = __importDefault(require("../models/Client.model"));
+const Town_model_1 = __importDefault(require("../models/Town.model"));
 const utils_1 = require("../utils");
 const getAllClients = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -27,6 +28,9 @@ const getAllClients = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 exports.getAllClients = getAllClients;
 const createNewClient = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        if ((0, utils_1.isEmpty)(req.body)) {
+            return res.status(401).send({ message: "body is empty" });
+        }
         const { email, orders, name, nit, cellphone, bill } = req.body;
         const saveClient = new Client_model_1.default({
             name,
@@ -42,10 +46,36 @@ const createNewClient = (req, res) => __awaiter(void 0, void 0, void 0, function
             .json({ message: "Client created successfuly", client: saveClient });
     }
     catch (error) {
-        res.status(400).send(error);
+        console.log(error);
+        res.status(400).send({ message: "Seem like some information exist yet" });
     }
 });
 exports.createNewClient = createNewClient;
+const createNewClientByTown = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        if ((0, utils_1.isEmpty)(req.body)) {
+            return res.status(400).send({ message: "Por favor, rellena los campos" });
+        }
+        const clientData = req.body;
+        const currentTown = yield Town_model_1.default.findById(id);
+        if (!currentTown) {
+            return res.status(404).send({ message: "Current town doesnt exist" });
+        }
+        const saveClient = new Client_model_1.default(Object.assign(Object.assign({}, clientData), { town_id: currentTown._id }));
+        currentTown.clients = [...currentTown.clients, saveClient._id];
+        yield saveClient.save();
+        yield currentTown.save();
+        res
+            .status(200)
+            .json({ message: "Cliente creado exitosamente", client: saveClient });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(400).send({ message: "Seem like some information exist yet" }); // ->
+    }
+});
+exports.createNewClientByTown = createNewClientByTown;
 const updateClient = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;

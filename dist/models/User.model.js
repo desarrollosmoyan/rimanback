@@ -1,13 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.userSchema = void 0;
 const mongoose_1 = require("mongoose");
-const Route_model_1 = require("./Route.model");
-const userSchema = new mongoose_1.Schema({
+exports.userSchema = new mongoose_1.Schema({
+    email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    email: { type: String, required: true },
-    route: Route_model_1.routeSchema,
+    route: { type: mongoose_1.Types.ObjectId, ref: "route" },
+    currentTurn: { type: mongoose_1.Types.ObjectId, ref: "turn" },
 });
-userSchema.statics.comparePassword = (password, receivedPassword) => {
+exports.userSchema.statics.comparePassword = (password, receivedPassword) => {
     return password === receivedPassword ? true : false;
 };
-exports.default = (0, mongoose_1.model)("user", userSchema);
+exports.default = (0, mongoose_1.model)("user", exports.userSchema);

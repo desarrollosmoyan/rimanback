@@ -14,20 +14,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.signin = exports.signup = void 0;
 const User_model_1 = __importDefault(require("../models/User.model"));
+const Turn_model_1 = __importDefault(require("../models/Turn.model"));
 const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password } = req.body;
+        console.log(req.body);
         const newUser = new User_model_1.default({
             email,
             password,
         });
-        const saveUser = yield newUser.save();
+        const newTurn = new Turn_model_1.default({
+            startDate: Date.now(),
+            user: newUser._id,
+        });
+        newUser.currentTurn = newTurn._id;
+        yield newUser.save();
         return res.status(200).send({
             message: "User created successfuly",
-            user: Object.assign({}, saveUser),
+            user: {
+                newUser,
+            },
         });
     }
     catch (error) {
+        console.log(error);
         return res.status(400).json({ message: "Can't create user" });
     }
 });
@@ -37,17 +47,30 @@ const signin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, password } = req.body;
         const userFound = yield User_model_1.default.findOne({ email });
         if (!userFound) {
-            return res.json(401).send({
-                message: "User not found",
+            return res.json(404).send({
+                message: "Usuario no encontrado",
             });
         }
         const hasPasswordMatched = User_model_1.default.comparePassword(password, userFound.password);
         if (!hasPasswordMatched) {
-            return res.status(401).json({ message: "Invalid password" });
+            return res.status(400).json({ message: "Contraseña incorrecta" });
         }
+        yield userFound.populate({
+            path: "route",
+            populate: {
+                path: "towns",
+                model: "town",
+                populate: { path: "clients", model: "client" },
+            },
+        });
+        const elepe = yield userFound.populate({
+            path: "currentTurn",
+            model: "turn",
+        });
         return res.status(200).send({ user: userFound });
     }
     catch (error) {
+        console.log(error);
         return res.status(400).json({ message: error });
     }
 });
