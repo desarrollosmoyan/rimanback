@@ -6,4 +6,5 @@ const checkSignup_1 = require("../middlewares/checkSignup");
 const authRouter = (0, express_1.Router)();
 authRouter.post("/signup", [checkSignup_1.checkExistingUser], auth_controller_1.signup);
 authRouter.post("/signin", auth_controller_1.signin);
+authRouter.get("/user/:id", auth_controller_1.getUser);
 exports.default = authRouter;

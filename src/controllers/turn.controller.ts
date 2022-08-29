@@ -6,7 +6,7 @@ import UserModel from "../models/User.model";
 export const endTurn = async (req: Request, res: Response) => {
   const { user, orders } = req.body;
   try {
-    const userFounded = UserModel.findById(user);
+    const userFounded = await UserModel.findById(user);
     if (!userFounded) {
       return res.status(404).send({ message: "user not found" });
     }
@@ -17,8 +17,9 @@ export const endTurn = async (req: Request, res: Response) => {
       startDate: Date.now(),
     });
     await newTurn.save();
+    await userFounded.save();
     res.status(200).send({
-      message: "User created successfuly",
+      message: "Turn created successfuly",
       turn: {
         newTurn,
       },
