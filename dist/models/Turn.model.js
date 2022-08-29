@@ -13,7 +13,7 @@ const mongoose_1 = require("mongoose");
 const Order_model_1 = require("./Order.model");
 const Expense_model_1 = require("./Expense.model");
 const turnSchema = new mongoose_1.Schema({
-    turn_id: { type: Number, required: true },
+    turn_id: { type: Number },
     startDate: { type: Date, required: true },
     endDate: { type: Date },
     orders: [Order_model_1.orderSchema],
@@ -27,9 +27,12 @@ turnSchema.pre("save", function (next) {
         const modelList = yield TurnModel.find({ user: (_a = this.user) === null || _a === void 0 ? void 0 : _a._id }).sort({
             endDate: "desc",
         });
+        if (modelList.length == 0) {
+            doc.turn_id = 0;
+            next();
+        }
         const previousTurn = modelList[0];
         doc.turn_id = previousTurn.turn_id + 1;
-        console.log(doc.turn_id);
         if (previousTurn.orders) {
             const unpayedOrders = previousTurn.orders.filter((order) => {
                 const totalPayed = order.payments.reduce((p, c) => {

@@ -7,7 +7,7 @@ import { paymentSchema } from "./Payment.model";
 import { PaymentSchemaInterface } from "../types/payment.types";
 
 const turnSchema = new Schema<TurnDocumentInterface>({
-  turn_id: { type: Number, required: true },
+  turn_id: { type: Number },
   startDate: { type: Date, required: true },
   endDate: { type: Date },
   orders: [orderSchema],
@@ -20,9 +20,12 @@ turnSchema.pre("save", async function (next) {
   const modelList = await TurnModel.find({ user: this.user?._id }).sort({
     endDate: "desc",
   });
+  if (modelList.length == 0) {
+    doc.turn_id = 0;
+    next();
+  }
   const previousTurn = modelList[0];
   doc.turn_id = previousTurn.turn_id + 1;
-  console.log(doc.turn_id);
   if (previousTurn.orders) {
     const unpayedOrders = previousTurn.orders.filter(
       (order: OrderSchemaInterface) => {
