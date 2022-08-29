@@ -4,7 +4,7 @@ import TownModel from "../models/Town.model";
 import TurnModel from "../models/Turn.model";
 export const signup = async (req: Request, res: Response) => {
   try {
-    const { email, password, route } = req.body;
+    const { email, password } = req.body;
     console.log(req.body);
     const newUser = new UserModel({
       email,
@@ -61,9 +61,8 @@ export const signin = async (req: Request, res: Response) => {
         },
       },
     });
-    const elepe = await userFound.populate({
+    await userFound.populate({
       path: "currentTurn",
-      model: "turn",
     });
     return res.status(200).send({ user: userFound });
   } catch (error: any) {
