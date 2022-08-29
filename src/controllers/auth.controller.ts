@@ -63,10 +63,24 @@ export const signin = async (req: Request, res: Response) => {
     });
     await userFound.populate({
       path: "currentTurn",
+      populate: {
+        path: "orders",
+      },
     });
     return res.status(200).send({ user: userFound });
   } catch (error: any) {
     console.log(error);
     return res.status(400).json({ message: error });
   }
+};
+
+export const getUser = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const user = UserModel.findById(id);
+    if (!user) {
+      return res.status(400).send({ message: "Usuario no encontrado" });
+    }
+    res.status(200).send(user);
+  } catch (error) {}
 };

@@ -18,15 +18,16 @@ const User_model_1 = __importDefault(require("../models/User.model"));
 const endTurn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { user, orders } = req.body;
     try {
-        const userFounded = User_model_1.default.findById(user);
+        const userFounded = yield User_model_1.default.findById(user);
         if (!userFounded) {
             return res.status(404).send({ message: "user not found" });
         }
         console.log(req.body);
         const newTurn = new Turn_model_1.default(Object.assign(Object.assign({}, req.body), { turn_id: 0, startDate: Date.now() }));
         yield newTurn.save();
+        yield userFounded.save();
         res.status(200).send({
-            message: "User created successfuly",
+            message: "Turn created successfuly",
             turn: {
                 newTurn,
             },

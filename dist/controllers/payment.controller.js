@@ -29,6 +29,12 @@ const createPayment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         const newPayment = new Payment_model_1.default(req.body);
         currentOrder.payments = [...currentOrder.payments, newPayment];
         yield currentOrder.save();
+        res.status(200).send({
+            message: "Pago creado exitosamente",
+            payment: {
+                newPayment,
+            },
+        });
     }
     catch (error) {
         res.status(404).send({ message: "error" });

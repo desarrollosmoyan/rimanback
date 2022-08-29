@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signin = exports.signup = void 0;
+exports.getUser = exports.signin = exports.signup = void 0;
 const User_model_1 = __importDefault(require("../models/User.model"));
 const Turn_model_1 = __importDefault(require("../models/Turn.model"));
 const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -73,6 +73,9 @@ const signin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
         yield userFound.populate({
             path: "currentTurn",
+            populate: {
+                path: "orders",
+            },
         });
         return res.status(200).send({ user: userFound });
     }
@@ -82,3 +85,15 @@ const signin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.signin = signin;
+const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        const user = User_model_1.default.findById(id);
+        if (!user) {
+            return res.status(400).send({ message: "Usuario no encontrado" });
+        }
+        res.status(200).send(user);
+    }
+    catch (error) { }
+});
+exports.getUser = getUser;
