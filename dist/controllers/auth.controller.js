@@ -17,7 +17,7 @@ const User_model_1 = __importDefault(require("../models/User.model"));
 const Turn_model_1 = __importDefault(require("../models/Turn.model"));
 const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { email, password } = req.body;
+        const { email, password, route } = req.body;
         console.log(req.body);
         const newUser = new User_model_1.default({
             email,
@@ -29,6 +29,7 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
         newUser.currentTurn = newTurn._id;
         yield newUser.save();
+        yield newTurn.save();
         return res.status(200).send({
             message: "User created successfuly",
             user: {
@@ -60,7 +61,14 @@ const signin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             populate: {
                 path: "towns",
                 model: "town",
-                populate: { path: "clients", model: "client" },
+                populate: {
+                    path: "clients",
+                    model: "client",
+                    populate: {
+                        path: "orders",
+                        model: "order",
+                    },
+                },
             },
         });
         const elepe = yield userFound.populate({
