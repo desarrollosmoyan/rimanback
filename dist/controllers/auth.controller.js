@@ -88,12 +88,20 @@ exports.signin = signin;
 const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const user = User_model_1.default.findById(id);
+        const user = yield User_model_1.default.findById(id);
         if (!user) {
             return res.status(400).send({ message: "Usuario no encontrado" });
         }
-        res.status(200).send(user);
+        res.status(200).send({
+            message: "Usuario encontrado con éxito",
+            user: {
+                user,
+            },
+        });
     }
-    catch (error) { }
+    catch (error) {
+        console.log(error);
+        res.status(400).send({ message: "Error", error: error.message });
+    }
 });
 exports.getUser = getUser;
