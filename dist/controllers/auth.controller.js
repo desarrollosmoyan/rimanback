@@ -47,7 +47,7 @@ const signin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, password } = req.body;
         const userFound = yield User_model_1.default.findOne({ email });
         if (!userFound) {
-            return res.json(404).send({
+            return res.status(404).send({
                 message: "Usuario no encontrado",
             });
         }

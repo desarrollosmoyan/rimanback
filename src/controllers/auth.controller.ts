@@ -33,7 +33,7 @@ export const signin = async (req: Request, res: Response) => {
     const { email, password } = req.body;
     const userFound = await UserModel.findOne({ email });
     if (!userFound) {
-      return res.json(404).send({
+      return res.status(404).send({
         message: "Usuario no encontrado",
       });
     }
