@@ -16,6 +16,7 @@ exports.getAllOrders = exports.createOrder = void 0;
 const Client_model_1 = __importDefault(require("../models/Client.model"));
 const Order_model_1 = __importDefault(require("../models/Order.model"));
 const utils_1 = require("../utils");
+const Payment_model_1 = __importDefault(require("../models/Payment.model"));
 const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
@@ -29,6 +30,10 @@ const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         }
         const date = Date.now();
         const newOrder = new Order_model_1.default(Object.assign(Object.assign({}, orderData), { date: date }));
+        if (orderData.payment) {
+            const newPayment = new Payment_model_1.default(orderData.payment);
+            newOrder.payments = [newPayment];
+        }
         yield newOrder.save();
         if (currentClient.orders) {
             currentClient.orders = [...currentClient.orders, newOrder._id];

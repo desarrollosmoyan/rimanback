@@ -82,6 +82,27 @@ export const getUser = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(400).send({ message: "Usuario no encontrado" });
     }
+    await user.populate({
+      path: "route",
+      populate: {
+        path: "towns",
+        model: "town",
+        populate: {
+          path: "clients",
+          model: "client",
+          populate: {
+            path: "orders",
+            model: "order",
+          },
+        },
+      },
+    });
+    await user.populate({
+      path: "currentTurn",
+      populate: {
+        path: "orders",
+      },
+    });
     res.status(200).send({
       message: "Usuario encontrado con éxito",
       user: {

@@ -92,6 +92,27 @@ const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (!user) {
             return res.status(400).send({ message: "Usuario no encontrado" });
         }
+        yield user.populate({
+            path: "route",
+            populate: {
+                path: "towns",
+                model: "town",
+                populate: {
+                    path: "clients",
+                    model: "client",
+                    populate: {
+                        path: "orders",
+                        model: "order",
+                    },
+                },
+            },
+        });
+        yield user.populate({
+            path: "currentTurn",
+            populate: {
+                path: "orders",
+            },
+        });
         res.status(200).send({
             message: "Usuario encontrado con éxito",
             user: {

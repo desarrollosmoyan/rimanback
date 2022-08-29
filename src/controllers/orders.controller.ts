@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import ClientModel from "../models/Client.model";
 import OrderModel from "../models/Order.model";
 import { isEmpty } from "../utils";
+import PaymentModel from "../models/Payment.model";
 
 export const createOrder = async (req: Request, res: Response) => {
   try {
@@ -15,12 +16,17 @@ export const createOrder = async (req: Request, res: Response) => {
     if (!currentClient) {
       return res.status(401).send({ message: "Client no encontrado" });
     }
+
     const date = Date.now();
 
     const newOrder = new OrderModel({
       ...orderData,
       date: date,
     });
+    if (orderData.payment) {
+      const newPayment = new PaymentModel(orderData.payment);
+      newOrder.payments = [newPayment];
+    }
     await newOrder.save();
     if (currentClient.orders) {
       currentClient.orders = [...currentClient.orders, newOrder._id];

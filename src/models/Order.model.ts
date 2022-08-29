@@ -18,6 +18,7 @@ export const orderSchema = new Schema<OrderDocumentInterface>({
   date: { type: Date, required: true }, // fecha
   payments: { type: [paymentSchema], default: [] }, // payments => bonos
   client: clientSchema, // cliente que realizó el pedido
+  turn_id: { type: Types.ObjectId },
 });
 
 const OrderModel = model<OrderDocumentInterface, OrderModelInterface>(
