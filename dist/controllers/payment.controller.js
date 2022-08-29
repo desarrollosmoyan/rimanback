@@ -20,7 +20,7 @@ const createPayment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     try {
         const { id } = req.params;
         if ((0, utils_1.isEmpty)(req.body)) {
-            return res.json(400).send({ message: "Body is empty" });
+            return res.json(400).send({ message: "Por favor, rellene los campos" });
         }
         const currentOrder = yield Order_model_1.default.findById(id);
         if (!currentOrder) {
@@ -37,7 +37,19 @@ const createPayment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 exports.createPayment = createPayment;
 const getAllPayments = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const { id } = req.params;
+        if (!id) {
+            return res.status(400).send({ message: "Ingresa un ID válido" });
+        }
+        const order = yield Order_model_1.default.findById(id);
+        if (!order) {
+            return res.status(400).send({ message: "No se encuentra el pedido" });
+        }
+        const listOfPayments = order.payments;
+        return res.status(200).send({ payments: listOfPayments });
     }
-    catch (err) { }
+    catch (err) {
+        res.status(400).send({ message: "Error" });
+    }
 });
 exports.getAllPayments = getAllPayments;
