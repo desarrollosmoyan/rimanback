@@ -50,7 +50,14 @@ export const signin = async (req: Request, res: Response) => {
       populate: {
         path: "towns",
         model: "town",
-        populate: { path: "clients", model: "client" },
+        populate: {
+          path: "clients",
+          model: "client",
+          populate: {
+            path: "orders",
+            model: "order",
+          },
+        },
       },
     });
     const elepe = await userFound.populate({
