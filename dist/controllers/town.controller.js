@@ -20,7 +20,6 @@ const createTown = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     try {
         const { id } = req.params;
         const arrTowns = req.body;
-        console.log(arrTowns);
         if ((0, utils_1.isEmpty)(arrTowns)) {
             return res.status(400).send({ message: "Your request is empty" });
         }
@@ -42,7 +41,6 @@ const createTown = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.status(200).send(arrOfModels);
     }
     catch (error) {
-        console.log(error);
         res.status(400).send({ message: "Can't create a town" });
     }
 });

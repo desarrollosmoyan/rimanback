@@ -9,6 +9,7 @@ export interface TurnSchemaInterface {
   user: Types.ObjectId | undefined;
   orders: OrderSchemaInterface[];
   expenses: ExpenseSchemaInterface[];
+  hasEnded: boolean;
 }
 export interface TurnDocumentInterface extends TurnSchemaInterface, Document {}
 

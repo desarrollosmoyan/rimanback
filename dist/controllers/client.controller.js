@@ -46,7 +46,6 @@ const createNewClient = (req, res) => __awaiter(void 0, void 0, void 0, function
             .json({ message: "Client created successfuly", client: saveClient });
     }
     catch (error) {
-        console.log(error);
         res.status(400).send({ message: "Seem like some information exist yet" });
     }
 });
@@ -66,13 +65,16 @@ const createNewClientByTown = (req, res) => __awaiter(void 0, void 0, void 0, fu
         currentTown.clients = [...currentTown.clients, saveClient._id];
         yield saveClient.save();
         yield currentTown.save();
+        console.log("xd");
         res
             .status(200)
             .json({ message: "Cliente creado exitosamente", client: saveClient });
     }
     catch (error) {
-        console.log(error);
-        res.status(400).send({ message: "Seem like some information exist yet" }); // ->
+        res.status(400).send({
+            message: "Seem like some information exist yet",
+            error: error.message,
+        }); // ->
     }
 });
 exports.createNewClientByTown = createNewClientByTown;

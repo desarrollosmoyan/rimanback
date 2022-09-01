@@ -18,7 +18,6 @@ const Turn_model_1 = __importDefault(require("../models/Turn.model"));
 const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password } = req.body;
-        console.log(req.body);
         const newUser = new User_model_1.default({
             email,
             password,
@@ -38,7 +37,6 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
     catch (error) {
-        console.log(error);
         return res.status(400).json({ message: "Can't create user" });
     }
 });
@@ -80,7 +78,6 @@ const signin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return res.status(200).send({ user: userFound });
     }
     catch (error) {
-        console.log(error);
         return res.status(400).json({ message: error });
     }
 });
@@ -121,7 +118,6 @@ const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
     catch (error) {
-        console.log(error);
         res.status(400).send({ message: "Error", error: error.message });
     }
 });

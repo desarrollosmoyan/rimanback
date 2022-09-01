@@ -6,7 +6,6 @@ import { Error } from "mongoose";
 export const signup = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-    console.log(req.body);
     const newUser = new UserModel({
       email,
       password,
@@ -25,7 +24,6 @@ export const signup = async (req: Request, res: Response) => {
       },
     });
   } catch (error: any) {
-    console.log(error);
     return res.status(400).json({ message: "Can't create user" });
   }
 };
@@ -70,7 +68,6 @@ export const signin = async (req: Request, res: Response) => {
     });
     return res.status(200).send({ user: userFound });
   } catch (error: any) {
-    console.log(error);
     return res.status(400).json({ message: error });
   }
 };
@@ -110,7 +107,6 @@ export const getUser = async (req: Request, res: Response) => {
       },
     });
   } catch (error: any) {
-    console.log(error);
     res.status(400).send({ message: "Error", error: error.message });
   }
 };
