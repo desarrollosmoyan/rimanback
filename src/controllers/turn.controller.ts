@@ -36,5 +36,3 @@ export const endTurn = async (req: Request, res: Response) => {
     res.status(400).send({ message: "error", error: error });
   }
 };
-
-export const updateTurn = async (req: Request, res: Response) => {};

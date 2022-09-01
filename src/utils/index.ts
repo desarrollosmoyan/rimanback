@@ -2,6 +2,7 @@ import { OrderSchemaInterface } from "../types/order.types";
 import { TurnDocumentInterface } from "../types/turn.types";
 import TurnModel from "../models/Turn.model";
 import { ObjectId } from "mongoose";
+import { UserSchemaInterface } from "../types/user.types";
 export const isEmpty = (obj: any) => {
   return Object.keys(obj).length === 0;
 };

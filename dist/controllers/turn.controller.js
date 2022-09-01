@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateTurn = exports.endTurn = void 0;
+exports.endTurn = void 0;
 const Turn_model_1 = __importDefault(require("../models/Turn.model"));
 const utils_1 = require("../utils");
 const User_model_1 = __importDefault(require("../models/User.model"));
@@ -48,5 +48,3 @@ const endTurn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.endTurn = endTurn;
-const updateTurn = (req, res) => __awaiter(void 0, void 0, void 0, function* () { });
-exports.updateTurn = updateTurn;
