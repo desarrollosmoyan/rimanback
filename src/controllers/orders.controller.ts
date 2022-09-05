@@ -79,3 +79,40 @@ export const getAllOrders = async (req: Request, res: Response) => {
     res.status(400).send({ message: "error" });
   }
 };
+
+export const updateOneOrder = async (req: Request, res: Response) => {
+  try {
+    const orderId = req.params.id;
+    const newOrderInfo = req.body;
+    if (isEmpty(newOrderInfo)) {
+      return res.status(400).json({ message: "Request body is empty" });
+    }
+    const orderUpdated = await OrderModel.findByIdAndUpdate(
+      orderId,
+      newOrderInfo
+    );
+    if (!orderUpdated) {
+      return res.status(404).json({ message: "Order not founded" });
+    }
+    res.status(200).json({
+      message: "Orden modificada exitosamente",
+      order: {
+        orderUpdated,
+      },
+    });
+  } catch (error: any) {
+    return res.status(400).json({ message: error.message, error: error });
+  }
+};
+
+export const deleteOneOrder = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    if (!id) {
+      return res.status(400).json({ message: "Order not found" });
+    }
+    const p = await OrderModel.findByIdAndDelete(id);
+  } catch (error: any) {
+    res.status(200).json({ message: error.message, error: error });
+  }
+};
