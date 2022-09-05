@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllOrders = exports.createOrder = void 0;
+exports.deleteOneOrder = exports.updateOneOrder = exports.getAllOrders = exports.createOrder = void 0;
 const Client_model_1 = __importDefault(require("../models/Client.model"));
 const Order_model_1 = __importDefault(require("../models/Order.model"));
 const utils_1 = require("../utils");
@@ -85,3 +85,43 @@ const getAllOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.getAllOrders = getAllOrders;
+const updateOneOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const orderId = req.params.id;
+        const newOrderInfo = req.body;
+        if ((0, utils_1.isEmpty)(newOrderInfo)) {
+            return res.status(400).json({ message: "Request body is empty" });
+        }
+        const orderUpdated = yield Order_model_1.default.findByIdAndUpdate(orderId, newOrderInfo);
+        if (!orderUpdated) {
+            return res.status(404).json({ message: "Order not founded" });
+        }
+        res.status(200).json({
+            message: "Orden modificada exitosamente",
+            order: {
+                orderUpdated,
+            },
+        });
+    }
+    catch (error) {
+        res.status(400).json({ message: error.message, error: error });
+    }
+});
+exports.updateOneOrder = updateOneOrder;
+const deleteOneOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const id = req.params.id;
+        if (!id) {
+            return res.status(400).json({ message: "Id it isnt here" });
+        }
+        const deletedDocument = yield Order_model_1.default.findByIdAndDelete(id);
+        if (!deletedDocument) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+        res.status(200).json({ message: "Pedido eliminado correctamente" });
+    }
+    catch (error) {
+        res.status(200).json({ message: error.message, error: error });
+    }
+});
+exports.deleteOneOrder = deleteOneOrder;

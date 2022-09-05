@@ -101,7 +101,7 @@ export const updateOneOrder = async (req: Request, res: Response) => {
       },
     });
   } catch (error: any) {
-    return res.status(400).json({ message: error.message, error: error });
+    res.status(400).json({ message: error.message, error: error });
   }
 };
 
@@ -109,9 +109,13 @@ export const deleteOneOrder = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
     if (!id) {
-      return res.status(400).json({ message: "Order not found" });
+      return res.status(400).json({ message: "Id it isnt here" });
     }
-    const p = await OrderModel.findByIdAndDelete(id);
+    const deletedDocument = await OrderModel.findByIdAndDelete(id);
+    if (!deletedDocument) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+    res.status(200).json({ message: "Pedido eliminado correctamente" });
   } catch (error: any) {
     res.status(200).json({ message: error.message, error: error });
   }
