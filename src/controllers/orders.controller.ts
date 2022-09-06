@@ -47,10 +47,15 @@ export const createOrder = async (req: Request, res: Response) => {
       if (populatedClient) {
         const userId: any = populatedClient!.town_id!.route_id!.user_id!
           .id as any;
-        const currentTurn = await TurnModel.findOne({ user: userId });
+        console.log(userId);
+        const currentTurn = await TurnModel.findOne({
+          user: userId,
+          hasEnded: false,
+        });
         if (!currentTurn) {
           return res.status(404).send({ message: "Not Found Turn!" });
         }
+        console.log(currentTurn);
         currentTurn.orders = [...currentTurn.orders, newOrder];
         await currentTurn.save();
       }

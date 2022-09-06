@@ -51,10 +51,15 @@ const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             if (populatedClient) {
                 const userId = populatedClient.town_id.route_id.user_id
                     .id;
-                const currentTurn = yield Turn_model_1.default.findOne({ user_id: userId });
+                console.log(userId);
+                const currentTurn = yield Turn_model_1.default.findOne({
+                    user: userId,
+                    hasEnded: false,
+                });
                 if (!currentTurn) {
                     return res.status(404).send({ message: "Not Found Turn!" });
                 }
+                console.log(currentTurn);
                 currentTurn.orders = [...currentTurn.orders, newOrder];
                 yield currentTurn.save();
             }
