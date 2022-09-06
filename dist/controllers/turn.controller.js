@@ -24,13 +24,15 @@ const endTurn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             return res.status(404).send({ message: "user not found" });
         }
         const turnList = yield Turn_model_1.default.find({ user: user }).sort({
-            endDate: "desc",
+            endDate: "asc",
         });
-        console.log(turnList);
         const prevTurn = turnList[0];
-        console.log(prevTurn);
         const newTurn = new Turn_model_1.default(Object.assign(Object.assign({}, req.body), { startDate: Date.now() }));
-        prevTurn.hasEnded = true;
+        console.log(prevTurn);
+        yield Turn_model_1.default.findByIdAndUpdate(prevTurn.id, {
+            hasEnded: true,
+            endDate: Date.now(),
+        });
         yield (0, utils_1.addUncompletedTurns)(prevTurn, newTurn);
         yield prevTurn.save();
         yield newTurn.save();

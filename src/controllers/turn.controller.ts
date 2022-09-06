@@ -11,16 +11,18 @@ export const endTurn = async (req: Request, res: Response) => {
       return res.status(404).send({ message: "user not found" });
     }
     const turnList = await TurnModel.find({ user: user }).sort({
-      endDate: "desc",
+      endDate: "asc",
     });
-    console.log(turnList);
     const prevTurn = turnList[0];
-    console.log(prevTurn);
     const newTurn = new TurnModel({
       ...req.body,
       startDate: Date.now(),
     });
-    prevTurn.hasEnded = true;
+    console.log(prevTurn);
+    await TurnModel.findByIdAndUpdate(prevTurn.id, {
+      hasEnded: true,
+      endDate: Date.now(),
+    });
     await addUncompletedTurns(prevTurn, newTurn);
     await prevTurn.save();
     await newTurn.save();
