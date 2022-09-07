@@ -13,42 +13,9 @@ const turnSchema = new Schema<TurnDocumentInterface>({
   orders: [orderSchema],
   user: { type: Types.ObjectId, required: true, ref: "user" },
   expenses: [expenseSchema],
+  hasEnded: { type: Boolean, default: false, required: true },
 });
 
-turnSchema.pre("save", async function (next) {
-  const doc = this;
-  const modelList = await TurnModel.find({ user: this.user?._id }).sort({
-    endDate: "desc",
-  });
-  if (modelList.length == 0) {
-    doc.turn_id = 0;
-    next();
-  }
-  const previousTurn = modelList[0];
-  doc.turn_id = previousTurn.turn_id + 1;
-  if (previousTurn.orders) {
-    const unpayedOrders = previousTurn.orders.filter(
-      (order: OrderSchemaInterface) => {
-        const totalPayed = order.payments.reduce((p: any, c: any) => {
-          console.log({ p, c: c.amount });
-          return p + c.amount;
-        }, 0);
-        console.log(totalPayed);
-        if (order.total - totalPayed !== 0) {
-          order.total = order.total - totalPayed;
-          order.payments = [];
-          return true;
-        }
-        return false;
-      }
-    );
-    previousTurn.endDate = new Date(Date.now());
-    previousTurn.save();
-    doc.orders = [...unpayedOrders];
-    doc.startDate = new Date(Date.now());
-    next();
-  }
-});
 const TurnModel = model<TurnDocumentInterface, TurnModelInterface>(
   "turn",
   turnSchema

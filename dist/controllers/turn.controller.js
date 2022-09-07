@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.endTurn = void 0;
 const Turn_model_1 = __importDefault(require("../models/Turn.model"));
+const utils_1 = require("../utils");
 const User_model_1 = __importDefault(require("../models/User.model"));
 const endTurn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { user, orders } = req.body;
@@ -22,8 +23,18 @@ const endTurn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (!userFounded) {
             return res.status(404).send({ message: "user not found" });
         }
-        console.log(req.body);
-        const newTurn = new Turn_model_1.default(Object.assign(Object.assign({}, req.body), { turn_id: 0, startDate: Date.now() }));
+        const turnList = yield Turn_model_1.default.find({ user: user }).sort({
+            endDate: "asc",
+        });
+        const prevTurn = turnList[0];
+        const newTurn = new Turn_model_1.default(Object.assign(Object.assign({}, req.body), { startDate: Date.now() }));
+        console.log(prevTurn);
+        yield Turn_model_1.default.findByIdAndUpdate(prevTurn.id, {
+            hasEnded: true,
+            endDate: Date.now(),
+        });
+        yield (0, utils_1.addUncompletedTurns)(prevTurn, newTurn);
+        yield prevTurn.save();
         yield newTurn.save();
         yield userFounded.save();
         res.status(200).send({
@@ -35,7 +46,7 @@ const endTurn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     catch (error) {
         console.log(error);
-        res.status(400).send({ message: "error" });
+        res.status(400).send({ message: "error", error: error });
     }
 });
 exports.endTurn = endTurn;

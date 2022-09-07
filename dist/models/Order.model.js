@@ -24,7 +24,8 @@ exports.orderSchema = new mongoose_1.Schema({
     total: { type: Number, required: true },
     date: { type: Date, required: true },
     payments: { type: [Payment_model_1.paymentSchema], default: [] },
-    client: Client_model_1.clientSchema, // cliente que realizó el pedido
+    client: Client_model_1.clientSchema,
+    turn_id: { type: mongoose_1.Types.ObjectId },
 });
 const OrderModel = (0, mongoose_1.model)("order", exports.orderSchema);
 exports.orderSchema.pre("save", function (next) {

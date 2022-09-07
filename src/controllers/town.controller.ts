@@ -8,7 +8,6 @@ export const createTown = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const arrTowns = req.body;
-    console.log(arrTowns);
     if (isEmpty(arrTowns)) {
       return res.status(400).send({ message: "Your request is empty" });
     }
@@ -29,7 +28,6 @@ export const createTown = async (req: Request, res: Response) => {
     }
     res.status(200).send(arrOfModels);
   } catch (error) {
-    console.log(error);
     res.status(400).send({ message: "Can't create a town" });
   }
 };

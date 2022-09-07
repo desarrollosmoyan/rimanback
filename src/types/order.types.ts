@@ -13,6 +13,7 @@ export interface OrderSchemaInterface {
   date: Date;
   payments: PaymentSchemaInterface[];
   client: ClientSchemaInterface;
+  turn_id: Types.ObjectId | undefined;
 }
 
 export interface OrderDocumentInterface

@@ -31,7 +31,6 @@ export const createNewClient = async (req: Request, res: Response) => {
       .status(200)
       .json({ message: "Client created successfuly", client: saveClient });
   } catch (error: any) {
-    console.log(error);
     res.status(400).send({ message: "Seem like some information exist yet" });
   }
 };
@@ -53,12 +52,15 @@ export const createNewClientByTown = async (req: Request, res: Response) => {
     currentTown.clients = [...currentTown.clients, saveClient._id];
     await saveClient.save();
     await currentTown.save();
+    console.log("xd");
     res
       .status(200)
       .json({ message: "Cliente creado exitosamente", client: saveClient });
   } catch (error: any) {
-    console.log(error);
-    res.status(400).send({ message: "Seem like some information exist yet" }); // ->
+    res.status(400).send({
+      message: "Seem like some information exist yet",
+      error: error.message,
+    }); // ->
   }
 };
 
