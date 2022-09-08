@@ -15,10 +15,10 @@ const isEmpty = (obj) => {
 };
 exports.isEmpty = isEmpty;
 const addUncompletedTurns = (prevTurn, newTurn) => __awaiter(void 0, void 0, void 0, function* () {
-    if (prevTurn.orders && prevTurn.hasEnded) {
+    console.log({ prevTurn: prevTurn.orders });
+    if (prevTurn.orders) {
         const unpayedOrders = prevTurn.orders.filter((order) => {
             const totalPayed = order.payments.reduce((p, c) => {
-                console.log({ p, c: c.amount });
                 return p + c.amount;
             }, 0);
             if (order.total - totalPayed !== 0) {

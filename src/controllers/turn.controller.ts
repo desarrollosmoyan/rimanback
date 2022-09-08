@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import TurnModel from "../models/Turn.model";
 import { addUncompletedTurns, isEmpty } from "../utils";
 import UserModel from "../models/User.model";
+import { ObjectId } from "mongoose";
 
 export const endTurn = async (req: Request, res: Response) => {
   const { user, orders } = req.body;
@@ -18,11 +19,12 @@ export const endTurn = async (req: Request, res: Response) => {
       ...req.body,
       startDate: Date.now(),
     });
-    console.log(prevTurn);
-    await TurnModel.findByIdAndUpdate(prevTurn.id, {
-      hasEnded: true,
-      endDate: Date.now(),
-    });
+    prevTurn.hasEnded = true;
+    prevTurn.endDate = new Date(Date.now());
+
+    if (userFounded.currentTurn) {
+      userFounded.currentTurn = newTurn._id;
+    }
     await addUncompletedTurns(prevTurn, newTurn);
     await prevTurn.save();
     await newTurn.save();

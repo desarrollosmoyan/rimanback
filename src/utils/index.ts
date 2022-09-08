@@ -7,15 +7,12 @@ export const isEmpty = (obj: any) => {
   return Object.keys(obj).length === 0;
 };
 
-export const addUncompletedTurns = async (
-  prevTurn: TurnDocumentInterface,
-  newTurn: TurnDocumentInterface
-) => {
-  if (prevTurn.orders && prevTurn.hasEnded) {
+export const addUncompletedTurns = async (prevTurn: any, newTurn: any) => {
+  console.log({ prevTurn: prevTurn.orders });
+  if (prevTurn.orders) {
     const unpayedOrders = prevTurn.orders.filter(
       (order: OrderSchemaInterface) => {
         const totalPayed = order.payments.reduce((p: any, c: any) => {
-          console.log({ p, c: c.amount });
           return p + c.amount;
         }, 0);
         if (order.total - totalPayed !== 0) {
