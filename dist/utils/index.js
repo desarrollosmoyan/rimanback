@@ -15,7 +15,7 @@ const isEmpty = (obj) => {
 };
 exports.isEmpty = isEmpty;
 const addUncompletedTurns = (prevTurn, newTurn) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log({ prevTurn: prevTurn.orders });
+    //console.log({ prevTurn: prevTurn.orders });
     if (prevTurn.orders) {
         const unpayedOrders = prevTurn.orders.filter((order) => {
             const totalPayed = order.payments.reduce((p, c) => {
@@ -24,11 +24,14 @@ const addUncompletedTurns = (prevTurn, newTurn) => __awaiter(void 0, void 0, voi
             if (order.total - totalPayed !== 0) {
                 order.total = order.total - totalPayed;
                 order.payments = [];
+                order.quantity = 0;
+                console.log(order);
                 return true;
             }
             return false;
         });
         newTurn.orders = [...unpayedOrders];
+        console.log(unpayedOrders);
     }
 });
 exports.addUncompletedTurns = addUncompletedTurns;

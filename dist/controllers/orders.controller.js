@@ -30,11 +30,11 @@ const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             return res.status(401).send({ message: "Client no encontrado" });
         }
         const date = Date.now();
-        const newOrder = new Order_model_1.default(Object.assign(Object.assign({}, orderData), { date: date, total: orderData.quantity * orderData.valuePerOne }));
+        let payment;
         if (orderData.payment) {
-            const newPayment = new Payment_model_1.default(orderData.payment);
-            newOrder.payments = [newPayment];
+            payment = new Payment_model_1.default(orderData.payment);
         }
+        const newOrder = new Order_model_1.default(Object.assign(Object.assign({}, orderData), { date: date, total: orderData.quantity * orderData.valuePerOne, client: currentClient, payments: payment ? [payment] : [] }));
         yield newOrder.save();
         if (currentClient.orders) {
             currentClient.orders = [...currentClient.orders, newOrder._id];
@@ -49,17 +49,11 @@ const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                 },
             });
             if (populatedClient) {
-                const userId = populatedClient.town_id.route_id.user_id
-                    .id;
-                console.log(userId);
-                const currentTurn = yield Turn_model_1.default.findOne({
-                    user: userId,
-                    hasEnded: false,
-                });
+                const currentTurn = yield Turn_model_1.default.findById(orderData.turn_id);
                 if (!currentTurn) {
                     return res.status(404).send({ message: "Not Found Turn!" });
                 }
-                console.log(currentTurn);
+                console.log({ currentTurn: currentTurn });
                 currentTurn.orders = [...currentTurn.orders, newOrder];
                 yield currentTurn.save();
             }
@@ -69,6 +63,7 @@ const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         }
     }
     catch (error) {
+        console.log(error);
         res.status(400).send({ message: "Error" });
     }
 });

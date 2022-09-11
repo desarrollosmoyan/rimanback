@@ -20,17 +20,17 @@ export const createOrder = async (req: Request, res: Response) => {
     }
 
     const date = Date.now();
-
-    const newOrder = new OrderModel({
+    let payment;
+    if (orderData.payment) {
+      payment = new PaymentModel(orderData.payment);
+    }
+    const newOrder: any = new OrderModel({
       ...orderData,
       date: date,
       total: orderData.quantity * orderData.valuePerOne,
       client: currentClient,
+      payments: payment ? [payment] : [],
     });
-    if (orderData.payment) {
-      const newPayment = new PaymentModel(orderData.payment);
-      newOrder.payments = [newPayment];
-    }
     await newOrder.save();
     if (currentClient.orders) {
       currentClient.orders = [...currentClient.orders, newOrder._id];
@@ -46,17 +46,11 @@ export const createOrder = async (req: Request, res: Response) => {
         },
       });
       if (populatedClient) {
-        const userId: any = populatedClient!.town_id!.route_id!.user_id!
-          .id as any;
-        console.log(userId);
-        const currentTurn = await TurnModel.findOne({
-          user: userId,
-          hasEnded: false,
-        });
+        const currentTurn = await TurnModel.findById(orderData.turn_id);
         if (!currentTurn) {
           return res.status(404).send({ message: "Not Found Turn!" });
         }
-        console.log(currentTurn);
+        console.log({currentTurn:currentTurn});
         currentTurn.orders = [...currentTurn.orders, newOrder];
         await currentTurn.save();
       }
@@ -66,6 +60,7 @@ export const createOrder = async (req: Request, res: Response) => {
         .send({ message: "Pedido creado exitosamente", order: newOrder });
     }
   } catch (error) {
+    console.log(error);
     res.status(400).send({ message: "Error" });
   }
 };
