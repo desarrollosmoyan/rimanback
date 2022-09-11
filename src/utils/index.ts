@@ -17,6 +17,7 @@ export const addUncompletedTurns = async (prevTurn: any, newTurn: any) => {
         }, 0);
         if (order.total - totalPayed !== 0) {
           order.total = order.total - totalPayed;
+          order.quantity = 0;
           order.payments = [];
           order.quantity = 0;
           console.log(order);
