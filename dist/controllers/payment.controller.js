@@ -16,6 +16,7 @@ exports.getAllPayments = exports.createPayment = void 0;
 const utils_1 = require("../utils");
 const Payment_model_1 = __importDefault(require("../models/Payment.model"));
 const Order_model_1 = __importDefault(require("../models/Order.model"));
+const Turn_model_1 = __importDefault(require("../models/Turn.model"));
 const createPayment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
@@ -28,6 +29,21 @@ const createPayment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         }
         const newPayment = new Payment_model_1.default(req.body);
         currentOrder.payments = [...currentOrder.payments, newPayment];
+        const currentTurn = yield Turn_model_1.default.findById(currentOrder.turn_id);
+        console.log(currentTurn);
+        if (!currentTurn) {
+            return res.status(404).json({ message: "Turn not found" });
+        }
+        currentTurn.orders = [
+            ...currentTurn.orders.map((order) => {
+                console.log(order._id.toString() === currentOrder._id.toString());
+                return order._id.toString() === currentOrder._id.toString()
+                    ? currentOrder
+                    : order;
+            }),
+        ];
+        console.log(currentTurn.orders);
+        yield currentTurn.save();
         yield currentOrder.save();
         res.status(200).send({
             message: "Pago creado exitosamente",
@@ -45,7 +61,7 @@ const getAllPayments = (req, res) => __awaiter(void 0, void 0, void 0, function*
     try {
         const { id } = req.params;
         if (!id) {
-            return res.status(400).send({ message: "Ingresa un ID válido" });
+            return res.status(400).send({ message: "Ingresa un ID vÃ¡lido" });
         }
         const order = yield Order_model_1.default.findById(id);
         if (!order) {

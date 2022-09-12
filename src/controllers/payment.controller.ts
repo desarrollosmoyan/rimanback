@@ -15,18 +15,22 @@ export const createPayment = async (req: Request, res: Response) => {
     }
     const newPayment = new PaymentModel(req.body);
     currentOrder.payments = [...currentOrder.payments, newPayment];
-    const currentTurn = await TurnModel.findById(currentOrder._id);
+    const currentTurn = await TurnModel.findById(currentOrder.turn_id);
+    console.log(currentTurn);
     if (!currentTurn) {
       return res.status(404).json({ message: "Turn not found" });
     }
-    const orders = currentTurn.orders.filter((order) => {
-      if (order._id === currentOrder._id) {
-        return false;
-      }
-      return true;
-    });
-    currentTurn.orders = [...orders, currentOrder];
-    currentTurn.save();
+
+    currentTurn.orders = [
+      ...currentTurn.orders.map((order) => {
+        console.log(order._id.toString() === currentOrder._id.toString());
+        return order._id.toString() === currentOrder._id.toString()
+          ? currentOrder
+          : order;
+      }),
+    ];
+    console.log(currentTurn.orders);
+    await currentTurn.save();
     await currentOrder.save();
     res.status(200).send({
       message: "Pago creado exitosamente",
@@ -43,7 +47,7 @@ export const getAllPayments = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     if (!id) {
-      return res.status(400).send({ message: "Ingresa un ID válido" });
+      return res.status(400).send({ message: "Ingresa un ID vÃ¡lido" });
     }
 
     const order = await OrderModel.findById(id);

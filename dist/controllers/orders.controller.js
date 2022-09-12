@@ -96,6 +96,18 @@ const updateOneOrder = (req, res) => __awaiter(void 0, void 0, void 0, function*
         if (!orderUpdated) {
             return res.status(404).json({ message: "Order not founded" });
         }
+        const currentTurn = yield Turn_model_1.default.findById(orderUpdated.turn_id);
+        if (!currentTurn) {
+            return res.status(404).json({ message: "Turn not found" });
+        }
+        const filteredOrders = currentTurn.orders.filter((order) => {
+            if (order._id === orderUpdated._id) {
+                return false;
+            }
+            return true;
+        });
+        currentTurn.orders = [...filteredOrders, orderUpdated];
+        yield currentTurn.save();
         res.status(200).json({
             message: "Orden modificada exitosamente",
             order: {
@@ -118,6 +130,18 @@ const deleteOneOrder = (req, res) => __awaiter(void 0, void 0, void 0, function*
         if (!deletedDocument) {
             return res.status(404).json({ message: "Order not found" });
         }
+        const currentTurn = yield Turn_model_1.default.findById(deletedDocument.turn_id);
+        if (!currentTurn) {
+            return res.status(404).json({ message: "Turn not found" });
+        }
+        const ordersCleaned = currentTurn.orders.filter((order) => {
+            if (order._id === deletedDocument._id) {
+                return true;
+            }
+            return false;
+        });
+        currentTurn.orders = [...ordersCleaned];
+        yield currentTurn.save();
         res.status(200).json({ message: "Pedido eliminado correctamente" });
     }
     catch (error) {
