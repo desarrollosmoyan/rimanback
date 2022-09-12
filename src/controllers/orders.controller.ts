@@ -50,7 +50,7 @@ export const createOrder = async (req: Request, res: Response) => {
         if (!currentTurn) {
           return res.status(404).send({ message: "Not Found Turn!" });
         }
-        console.log({currentTurn:currentTurn});
+        console.log({ currentTurn: currentTurn });
         currentTurn.orders = [...currentTurn.orders, newOrder];
         await currentTurn.save();
       }
@@ -95,6 +95,18 @@ export const updateOneOrder = async (req: Request, res: Response) => {
     if (!orderUpdated) {
       return res.status(404).json({ message: "Order not founded" });
     }
+    const currentTurn = await TurnModel.findById(orderUpdated.turn_id);
+    if (!currentTurn) {
+      return res.status(404).json({ message: "Turn not found" });
+    }
+    const filteredOrders = currentTurn.orders.filter((order) => {
+      if (order._id === orderUpdated._id) {
+        return false;
+      }
+      return true;
+    });
+    currentTurn.orders = [...filteredOrders, orderUpdated];
+    await currentTurn.save();
     res.status(200).json({
       message: "Orden modificada exitosamente",
       order: {
@@ -116,6 +128,18 @@ export const deleteOneOrder = async (req: Request, res: Response) => {
     if (!deletedDocument) {
       return res.status(404).json({ message: "Order not found" });
     }
+    const currentTurn = await TurnModel.findById(deletedDocument.turn_id);
+    if (!currentTurn) {
+      return res.status(404).json({ message: "Turn not found" });
+    }
+    const ordersCleaned = currentTurn.orders.filter((order) => {
+      if (order._id === deletedDocument._id) {
+        return true;
+      }
+      return false;
+    });
+    currentTurn.orders = [...ordersCleaned];
+    await currentTurn.save();
     res.status(200).json({ message: "Pedido eliminado correctamente" });
   } catch (error: any) {
     res.status(200).json({ message: error.message, error: error });
