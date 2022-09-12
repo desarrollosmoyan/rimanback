@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { isEmpty } from "../utils";
 import PaymentModel from "../models/Payment.model";
 import OrderModel from "../models/Order.model";
+import TurnModel from "../models/Turn.model";
 export const createPayment = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -14,6 +15,18 @@ export const createPayment = async (req: Request, res: Response) => {
     }
     const newPayment = new PaymentModel(req.body);
     currentOrder.payments = [...currentOrder.payments, newPayment];
+    const currentTurn = await TurnModel.findById(currentOrder._id);
+    if (!currentTurn) {
+      return res.status(404).json({ message: "Turn not found" });
+    }
+    const orders = currentTurn.orders.filter((order) => {
+      if (order._id === currentOrder._id) {
+        return false;
+      }
+      return true;
+    });
+    currentTurn.orders = [...orders, currentOrder];
+    currentTurn.save();
     await currentOrder.save();
     res.status(200).send({
       message: "Pago creado exitosamente",
