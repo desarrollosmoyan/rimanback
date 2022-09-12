@@ -19,7 +19,7 @@ export const addUncompletedTurns = async (prevTurn: any, newTurn: any) => {
           order.total = order.total - totalPayed;
           order.quantity = 0;
           order.payments = [];
-          order.quantity = 0;
+          order.turn_id = newTurn._id;
           console.log(order);
           return true;
         }
@@ -27,6 +27,5 @@ export const addUncompletedTurns = async (prevTurn: any, newTurn: any) => {
       }
     );
     newTurn.orders = [...unpayedOrders];
-    console.log(unpayedOrders);
   }
 };
