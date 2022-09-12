@@ -134,9 +134,9 @@ export const deleteOneOrder = async (req: Request, res: Response) => {
     }
     const ordersCleaned = currentTurn.orders.filter((order) => {
       if (order._id === deletedDocument._id) {
-        return true;
+        return false;
       }
-      return false;
+      return true;
     });
     currentTurn.orders = [...ordersCleaned];
     await currentTurn.save();

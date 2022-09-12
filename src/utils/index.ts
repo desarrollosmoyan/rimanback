@@ -21,17 +21,6 @@ export const addUncompletedTurns = async (prevTurn: any, newTurn: any) => {
           order.quantity = 0;
           order.payments = [];
           order.turn_id = newTurn._id;
-          OrderModel.findById(
-            order._id,
-            {
-              turn_id: order.turn_id,
-            },
-            (err, model) => {
-              if (model) {
-                model.save();
-              }
-            }
-          );
           return true;
         }
         return false;
