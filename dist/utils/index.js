@@ -8,8 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.addUncompletedTurns = exports.isEmpty = void 0;
+const Order_model_1 = __importDefault(require("../models/Order.model"));
 const isEmpty = (obj) => {
     return Object.keys(obj).length === 0;
 };
@@ -17,7 +21,7 @@ exports.isEmpty = isEmpty;
 const addUncompletedTurns = (prevTurn, newTurn) => __awaiter(void 0, void 0, void 0, function* () {
     //console.log({ prevTurn: prevTurn.orders });
     if (prevTurn.orders) {
-        const unpayedOrders = prevTurn.orders.filter((order) => {
+        const unpayedOrders = prevTurn.orders.filter((order) => __awaiter(void 0, void 0, void 0, function* () {
             const totalPayed = order.payments.reduce((p, c) => {
                 return p + c.amount;
             }, 0);
@@ -25,14 +29,19 @@ const addUncompletedTurns = (prevTurn, newTurn) => __awaiter(void 0, void 0, voi
                 order.total = order.total - totalPayed;
                 order.quantity = 0;
                 order.payments = [];
-                order.quantity = 0;
-                console.log(order);
+                order.turn_id = newTurn._id;
+                Order_model_1.default.findById(order._id, {
+                    turn_id: order.turn_id,
+                }, (err, model) => {
+                    if (model) {
+                        model.save();
+                    }
+                });
                 return true;
             }
             return false;
-        });
+        }));
         newTurn.orders = [...unpayedOrders];
-        console.log(unpayedOrders);
     }
 });
 exports.addUncompletedTurns = addUncompletedTurns;
