@@ -34,6 +34,9 @@ const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         if (orderData.payment) {
             payment = new Payment_model_1.default(orderData.payment);
         }
+        const total = payment
+            ? orderData.quantity * orderData.valuePerOne - payment.amount
+            : orderData.quantity * orderData.valuePerOne;
         const newOrder = new Order_model_1.default(Object.assign(Object.assign({}, orderData), { date: date, total: orderData.quantity * orderData.valuePerOne, client: currentClient, payments: payment ? [payment] : [] }));
         yield newOrder.save();
         if (currentClient.orders) {

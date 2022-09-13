@@ -10,15 +10,18 @@ export const createPayment = async (req: Request, res: Response) => {
       return res.json(400).send({ message: "Por favor, rellene los campos" });
     }
     const currentOrder = await OrderModel.findById(id);
-    /*const turnList = await TurnModel.find({}).sort({
-      endDate: "asc",
-    });
-    const currentTurn = turnList[0];*/
     if (!currentOrder) {
       return res.status(404).send({ message: "Can't find order" });
     }
     const newPayment = new PaymentModel(req.body);
     const currentTurn = await TurnModel.findById(currentOrder.turn_id);
+    const previousTotal = currentTurn!.orders.find(
+      (order) => order._id === currentOrder._id
+    )!.total;
+    if (req.body.amount > previousTotal)
+      return res
+        .status(400)
+        .json({ message: "No puedes pagar más de lo que se debe" });
     currentOrder.payments = [...currentOrder.payments, newPayment];
     if (!currentTurn) {
       return res.status(404).json({ message: "Turn not found" });
@@ -28,6 +31,7 @@ export const createPayment = async (req: Request, res: Response) => {
       ...currentTurn.orders.map((order) => {
         if (order._id.toString() === currentOrder._id.toString()) {
           order.payments = [...order.payments, newPayment];
+          order.total = previousTotal - newPayment.amount;
           return order;
         }
         return order;

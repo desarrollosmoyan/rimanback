@@ -24,6 +24,9 @@ export const createOrder = async (req: Request, res: Response) => {
     if (orderData.payment) {
       payment = new PaymentModel(orderData.payment);
     }
+    const total = payment
+      ? orderData.quantity * orderData.valuePerOne - payment.amount
+      : orderData.quantity * orderData.valuePerOne;
     const newOrder: any = new OrderModel({
       ...orderData,
       date: date,

@@ -31,8 +31,10 @@ const createPayment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         if (!currentOrder) {
             return res.status(404).send({ message: "Can't find order" });
         }
-        const newPayment = new Payment_model_1.default(req.body);
         const currentTurn = yield Turn_model_1.default.findById(currentOrder.turn_id);
+        const previousTotal = currentTurn.orders.find((order) => order._id === currentOrder._id).total;
+        const newPayment = new Payment_model_1.default(req.body);
+        //const currentTurn = await TurnModel.findById(currentOrder.turn_id);
         currentOrder.payments = [...currentOrder.payments, newPayment];
         if (!currentTurn) {
             return res.status(404).json({ message: "Turn not found" });
@@ -41,6 +43,7 @@ const createPayment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             ...currentTurn.orders.map((order) => {
                 if (order._id.toString() === currentOrder._id.toString()) {
                     order.payments = [...order.payments, newPayment];
+                    order.total = previousTotal - newPayment.amount;
                     return order;
                 }
                 return order;
