@@ -24,22 +24,26 @@ const createPayment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             return res.json(400).send({ message: "Por favor, rellene los campos" });
         }
         const currentOrder = yield Order_model_1.default.findById(id);
+        /*const turnList = await TurnModel.find({}).sort({
+          endDate: "asc",
+        });
+        const currentTurn = turnList[0];*/
         if (!currentOrder) {
             return res.status(404).send({ message: "Can't find order" });
         }
         const newPayment = new Payment_model_1.default(req.body);
-        currentOrder.payments = [...currentOrder.payments, newPayment];
         const currentTurn = yield Turn_model_1.default.findById(currentOrder.turn_id);
-        console.log(currentTurn);
+        currentOrder.payments = [...currentOrder.payments, newPayment];
         if (!currentTurn) {
             return res.status(404).json({ message: "Turn not found" });
         }
         currentTurn.orders = [
             ...currentTurn.orders.map((order) => {
-                console.log(order._id.toString() === currentOrder._id.toString());
-                return order._id.toString() === currentOrder._id.toString()
-                    ? currentOrder
-                    : order;
+                if (order._id.toString() === currentOrder._id.toString()) {
+                    currentOrder.payments = [...order.payments, newPayment];
+                    return currentOrder;
+                }
+                return order;
             }),
         ];
         console.log(currentTurn.orders);

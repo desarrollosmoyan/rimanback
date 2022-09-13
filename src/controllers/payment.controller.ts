@@ -10,30 +10,29 @@ export const createPayment = async (req: Request, res: Response) => {
       return res.json(400).send({ message: "Por favor, rellene los campos" });
     }
     const currentOrder = await OrderModel.findById(id);
-    const turnList = await TurnModel.find({}).sort({
+    /*const turnList = await TurnModel.find({}).sort({
       endDate: "asc",
     });
-    const currentTurn = turnList[0];
+    const currentTurn = turnList[0];*/
     if (!currentOrder) {
       return res.status(404).send({ message: "Can't find order" });
     }
     const newPayment = new PaymentModel(req.body);
+    const currentTurn = await TurnModel.findById(currentOrder.turn_id);
     currentOrder.payments = [...currentOrder.payments, newPayment];
-    //const currentTurn = await TurnModel.findById(currentOrder.turn_id);
-    console.log(currentTurn);
     if (!currentTurn) {
       return res.status(404).json({ message: "Turn not found" });
     }
 
     currentTurn.orders = [
       ...currentTurn.orders.map((order) => {
-        console.log(order._id.toString() === currentOrder._id.toString());
-        return order._id.toString() === currentOrder._id.toString()
-          ? currentOrder
-          : order;
+        if (order._id.toString() === currentOrder._id.toString()) {
+          currentOrder.payments = [...order.payments, newPayment];
+          return currentOrder;
+        }
+        return order;
       }),
     ];
-    console.log(currentTurn.orders);
     await currentTurn.save();
     await currentOrder.save();
     res.status(200).send({

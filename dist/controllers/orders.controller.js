@@ -136,9 +136,9 @@ const deleteOneOrder = (req, res) => __awaiter(void 0, void 0, void 0, function*
         }
         const ordersCleaned = currentTurn.orders.filter((order) => {
             if (order._id === deletedDocument._id) {
-                return true;
+                return false;
             }
-            return false;
+            return true;
         });
         currentTurn.orders = [...ordersCleaned];
         yield currentTurn.save();

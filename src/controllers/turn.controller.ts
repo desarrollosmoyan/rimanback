@@ -19,14 +19,15 @@ export const endTurn = async (req: Request, res: Response) => {
       ...req.body,
       startDate: Date.now(),
     });
-    prevTurn.hasEnded = true;
-    prevTurn.endDate = new Date(Date.now());
-
     if (userFounded.currentTurn) {
       userFounded.currentTurn = newTurn._id;
     }
-    await addUncompletedTurns(prevTurn, newTurn);
-    await prevTurn.save();
+    if (prevTurn) {
+      prevTurn.hasEnded = true;
+      prevTurn.endDate = new Date(Date.now());
+      await addUncompletedTurns(prevTurn, newTurn);
+      await prevTurn.save();
+    }
     await newTurn.save();
     await userFounded.save();
     res.status(200).send({

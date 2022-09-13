@@ -30,17 +30,13 @@ const addUncompletedTurns = (prevTurn, newTurn) => __awaiter(void 0, void 0, voi
                 order.quantity = 0;
                 order.payments = [];
                 order.turn_id = newTurn._id;
-                Order_model_1.default.findById(order._id, {
-                    turn_id: order.turn_id,
-                }, (err, model) => {
-                    if (model) {
-                        model.save();
-                    }
-                });
                 return true;
             }
             return false;
         }));
+        yield Promise.all(unpayedOrders.map((order) => __awaiter(void 0, void 0, void 0, function* () {
+            yield Order_model_1.default.findByIdAndUpdate(order._id, { turn_id: newTurn._id });
+        })));
         newTurn.orders = [...unpayedOrders];
     }
 });

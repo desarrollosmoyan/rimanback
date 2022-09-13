@@ -1,4 +1,7 @@
-import { OrderSchemaInterface } from "../types/order.types";
+import {
+  OrderDocumentInterface,
+  OrderSchemaInterface,
+} from "../types/order.types";
 import { TurnDocumentInterface } from "../types/turn.types";
 import TurnModel from "../models/Turn.model";
 import { ObjectId } from "mongoose";
@@ -25,6 +28,11 @@ export const addUncompletedTurns = async (prevTurn: any, newTurn: any) => {
         }
         return false;
       }
+    );
+    await Promise.all(
+      unpayedOrders.map(async (order: OrderDocumentInterface) => {
+        await OrderModel.findByIdAndUpdate(order._id, { turn_id: newTurn._id });
+      })
     );
     newTurn.orders = [...unpayedOrders];
   }
