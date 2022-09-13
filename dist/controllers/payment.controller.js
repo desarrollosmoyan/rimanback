@@ -40,13 +40,12 @@ const createPayment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         currentTurn.orders = [
             ...currentTurn.orders.map((order) => {
                 if (order._id.toString() === currentOrder._id.toString()) {
-                    currentOrder.payments = [...order.payments, newPayment];
-                    return currentOrder;
+                    order.payments = [...order.payments, newPayment];
+                    return order;
                 }
                 return order;
             }),
         ];
-        console.log(currentTurn.orders);
         yield currentTurn.save();
         yield currentOrder.save();
         res.status(200).send({

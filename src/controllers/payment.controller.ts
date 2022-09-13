@@ -27,8 +27,8 @@ export const createPayment = async (req: Request, res: Response) => {
     currentTurn.orders = [
       ...currentTurn.orders.map((order) => {
         if (order._id.toString() === currentOrder._id.toString()) {
-          currentOrder.payments = [...order.payments, newPayment];
-          return currentOrder;
+          order.payments = [...order.payments, newPayment];
+          return order;
         }
         return order;
       }),
