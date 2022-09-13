@@ -15,8 +15,9 @@ export const createPayment = async (req: Request, res: Response) => {
     }
     const newPayment = new PaymentModel(req.body);
     const currentTurn = await TurnModel.findById(currentOrder.turn_id);
+    console.log(currentTurn);
     const previousTotal = currentTurn!.orders.find(
-      (order) => order._id === currentOrder._id
+      (order) => order._id.toString("") === currentOrder._id.toString("")
     )!.total;
     if (req.body.amount > previousTotal)
       return res
@@ -46,6 +47,7 @@ export const createPayment = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
+    console.log(error);
     res.status(404).send({ message: "error" });
   }
 };

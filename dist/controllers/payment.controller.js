@@ -24,17 +24,17 @@ const createPayment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             return res.json(400).send({ message: "Por favor, rellene los campos" });
         }
         const currentOrder = yield Order_model_1.default.findById(id);
-        /*const turnList = await TurnModel.find({}).sort({
-          endDate: "asc",
-        });
-        const currentTurn = turnList[0];*/
         if (!currentOrder) {
             return res.status(404).send({ message: "Can't find order" });
         }
-        const currentTurn = yield Turn_model_1.default.findById(currentOrder.turn_id);
-        const previousTotal = currentTurn.orders.find((order) => order._id === currentOrder._id).total;
         const newPayment = new Payment_model_1.default(req.body);
-        //const currentTurn = await TurnModel.findById(currentOrder.turn_id);
+        const currentTurn = yield Turn_model_1.default.findById(currentOrder.turn_id);
+        console.log(currentTurn);
+        const previousTotal = currentTurn.orders.find((order) => order._id.toString("") === currentOrder._id.toString("")).total;
+        if (req.body.amount > previousTotal)
+            return res
+                .status(400)
+                .json({ message: "No puedes pagar más de lo que se debe" });
         currentOrder.payments = [...currentOrder.payments, newPayment];
         if (!currentTurn) {
             return res.status(404).json({ message: "Turn not found" });
@@ -59,6 +59,7 @@ const createPayment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         });
     }
     catch (error) {
+        console.log(error);
         res.status(404).send({ message: "error" });
     }
 });
