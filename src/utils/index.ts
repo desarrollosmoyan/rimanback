@@ -13,12 +13,10 @@ export const isEmpty = (obj: any) => {
 
 export const addUncompletedTurns = async (prevTurn: any, newTurn: any) => {
   //console.log({ prevTurn: prevTurn.orders });
+  console.log('entrd');
   if (prevTurn.orders) {
     const unpayedOrders = prevTurn.orders.filter(
-      async (order: OrderSchemaInterface) => {
-        const totalPayed = order.payments.reduce((p: any, c: any) => {
-          return p + c.amount;
-        }, 0);
+      (order: OrderSchemaInterface) => {
         if (order.total !== 0) {
           order.total = order.total;
           order.quantity = 0;

@@ -20,11 +20,9 @@ const isEmpty = (obj) => {
 exports.isEmpty = isEmpty;
 const addUncompletedTurns = (prevTurn, newTurn) => __awaiter(void 0, void 0, void 0, function* () {
     //console.log({ prevTurn: prevTurn.orders });
+    console.log('entrd');
     if (prevTurn.orders) {
-        const unpayedOrders = prevTurn.orders.filter((order) => __awaiter(void 0, void 0, void 0, function* () {
-            const totalPayed = order.payments.reduce((p, c) => {
-                return p + c.amount;
-            }, 0);
+        const unpayedOrders = prevTurn.orders.filter((order) => {
             if (order.total !== 0) {
                 order.total = order.total;
                 order.quantity = 0;
@@ -33,7 +31,7 @@ const addUncompletedTurns = (prevTurn, newTurn) => __awaiter(void 0, void 0, voi
                 return true;
             }
             return false;
-        }));
+        });
         yield Promise.all(unpayedOrders.map((order) => __awaiter(void 0, void 0, void 0, function* () {
             yield Order_model_1.default.findByIdAndUpdate(order._id, { turn_id: newTurn._id });
         })));

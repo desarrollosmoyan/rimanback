@@ -21,12 +21,11 @@ const createPayment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     try {
         const { id } = req.params;
         if ((0, utils_1.isEmpty)(req.body)) {
-            return res.json(400).send({ message: "Por favor, rellene los campos" });
+            return res.json(400).send({ message: 'Por favor, rellene los campos' });
         }
         const currentOrder = yield Order_model_1.default.findById(id);
-        if (!currentOrder) {
+        if (!currentOrder)
             return res.status(404).send({ message: "Can't find order" });
-        }
         const newPayment = new Payment_model_1.default(req.body);
         const currentTurn = yield Turn_model_1.default.findById(currentOrder.turn_id);
         console.log(currentTurn);
@@ -34,16 +33,26 @@ const createPayment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         if (req.body.amount > previousTotal)
             return res
                 .status(400)
-                .json({ message: "No puedes pagar más de lo que se debe" });
+                .json({ message: 'No puedes pagar más de lo que se debe' });
         currentOrder.payments = [...currentOrder.payments, newPayment];
         if (!currentTurn) {
-            return res.status(404).json({ message: "Turn not found" });
+            return res.status(404).json({ message: 'Turn not found' });
         }
         currentTurn.orders = [
-            ...currentTurn.orders.map((order) => {
+            ...currentTurn.orders
+                .filter((order) => {
+                if (order.total === 0)
+                    return false;
+                order.total = previousTotal - newPayment.amount;
+                order.quantity = 0;
+                order.payments = [];
+                return true;
+            })
+                .map((order) => {
                 if (order._id.toString() === currentOrder._id.toString()) {
+                    console.log('matchd order');
+                    console.log({ previousTotal, newPayment: newPayment.amount });
                     order.payments = [...order.payments, newPayment];
-                    order.total = previousTotal - newPayment.amount;
                     return order;
                 }
                 return order;
@@ -52,7 +61,7 @@ const createPayment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         yield currentTurn.save();
         yield currentOrder.save();
         res.status(200).send({
-            message: "Pago creado exitosamente",
+            message: 'Pago creado exitosamente',
             payment: {
                 newPayment,
             },
@@ -60,7 +69,7 @@ const createPayment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
     catch (error) {
         console.log(error);
-        res.status(404).send({ message: "error" });
+        res.status(404).send({ message: 'error' });
     }
 });
 exports.createPayment = createPayment;
@@ -68,17 +77,17 @@ const getAllPayments = (req, res) => __awaiter(void 0, void 0, void 0, function*
     try {
         const { id } = req.params;
         if (!id) {
-            return res.status(400).send({ message: "Ingresa un ID vÃ¡lido" });
+            return res.status(400).send({ message: 'Ingresa un ID vÃ¡lido' });
         }
         const order = yield Order_model_1.default.findById(id);
         if (!order) {
-            return res.status(400).send({ message: "No se encuentra el pedido" });
+            return res.status(400).send({ message: 'No se encuentra el pedido' });
         }
         const listOfPayments = order.payments;
         return res.status(200).send({ payments: listOfPayments });
     }
     catch (err) {
-        res.status(400).send({ message: "Error" });
+        res.status(400).send({ message: 'Error' });
     }
 });
 exports.getAllPayments = getAllPayments;
