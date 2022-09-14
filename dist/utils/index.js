@@ -25,8 +25,8 @@ const addUncompletedTurns = (prevTurn, newTurn) => __awaiter(void 0, void 0, voi
             const totalPayed = order.payments.reduce((p, c) => {
                 return p + c.amount;
             }, 0);
-            if (order.total - totalPayed !== 0) {
-                order.total = order.total - totalPayed;
+            if (order.total !== 0) {
+                order.total = order.total;
                 order.quantity = 0;
                 order.payments = [];
                 order.turn_id = newTurn._id;

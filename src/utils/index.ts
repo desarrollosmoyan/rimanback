@@ -1,12 +1,12 @@
 import {
   OrderDocumentInterface,
   OrderSchemaInterface,
-} from "../types/order.types";
-import { TurnDocumentInterface } from "../types/turn.types";
-import TurnModel from "../models/Turn.model";
-import { ObjectId } from "mongoose";
-import { UserSchemaInterface } from "../types/user.types";
-import OrderModel from "../models/Order.model";
+} from '../types/order.types';
+import { TurnDocumentInterface } from '../types/turn.types';
+import TurnModel from '../models/Turn.model';
+import { ObjectId } from 'mongoose';
+import { UserSchemaInterface } from '../types/user.types';
+import OrderModel from '../models/Order.model';
 export const isEmpty = (obj: any) => {
   return Object.keys(obj).length === 0;
 };
@@ -19,8 +19,8 @@ export const addUncompletedTurns = async (prevTurn: any, newTurn: any) => {
         const totalPayed = order.payments.reduce((p: any, c: any) => {
           return p + c.amount;
         }, 0);
-        if (order.total - totalPayed !== 0) {
-          order.total = order.total - totalPayed;
+        if (order.total !== 0) {
+          order.total = order.total;
           order.quantity = 0;
           order.payments = [];
           order.turn_id = newTurn._id;
