@@ -1,0 +1,92 @@
+[
+    {
+        "name":"norte",
+        "towns":[
+            {
+            "name":"Alvarado"
+            },
+            {
+            "name":"Venadillo"
+            },
+            {
+            "name":"Mariquita"
+            },
+            {
+            "name":"Honda"
+            },
+            {
+            "name":"Guaduas"
+            },
+            {
+            "name":"Victoria"
+            },
+            {
+            "name":"Marquetalia"
+            },
+            {
+            "name":"La Dorada"
+            },
+            {
+            "name":"Norcasia"
+            },
+            {
+            "name":"Gualandai"
+            },
+            {
+            "name":"Chicoral"
+            },
+            {
+            "name":"Espinal"
+            },
+            {
+            "name":"Flandes"
+            },
+            {
+            "name":"Girardot"
+            },
+            {
+            "name":"Ricaute"
+            }
+        ]
+    },
+    {
+        "name":"ibague",
+        "towns":[
+            {
+                "name":"Guamo"
+            },
+            {
+                "name":"Saldaña"
+            },
+            {
+                "name":"Natagaima"
+            },
+            {
+                "name":"Aipe"
+                
+            },
+            {
+                "name":"Neiva"
+                
+            },
+            {
+                "name":"Palermo"
+                
+            },
+            {
+                "name":"Rivera"
+                
+            },
+            {
+                "name":"Ulloa"
+
+            }
+        ]
+    },
+    {
+        "name":"neiva"
+    },
+    {
+        "name":"pepe"
+    }
+]
