@@ -34,6 +34,7 @@ export const createNewClient = async (req: Request, res: Response) => {
     res.status(400).send({ message: "Seem like some information exist yet" });
   }
 };
+
 export const createNewClientByTown = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
