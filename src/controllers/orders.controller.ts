@@ -102,9 +102,8 @@ export const updateOneOrder = async (req: Request, res: Response) => {
     if (!currentTurn) {
       return res.status(404).json({ message: "Turn not found" });
     }
-    console.log(newOrderInfo);
     const filteredOrders = currentTurn.orders.filter((order) => {
-      if (order._id === orderUpdated._id) {
+      if (order._id.toString() === orderUpdated._id.toString()) {
         return false;
       }
       return true;

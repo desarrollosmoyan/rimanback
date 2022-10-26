@@ -7,7 +7,6 @@ import {
 
 export interface OrderSchemaInterface {
   _id: Types.ObjectId;
-  order_id: number;
   quantity: number;
   valuePerOne: number;
   total: number;
