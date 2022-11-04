@@ -6,7 +6,7 @@ import {
 } from "./payment.types";
 
 export interface OrderSchemaInterface {
-  order_id: number;
+  _id: Types.ObjectId;
   quantity: number;
   valuePerOne: number;
   total: number;

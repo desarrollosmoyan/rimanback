@@ -28,13 +28,15 @@ const endTurn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
         const prevTurn = turnList[0];
         const newTurn = new Turn_model_1.default(Object.assign(Object.assign({}, req.body), { startDate: Date.now() }));
-        console.log(prevTurn);
-        yield Turn_model_1.default.findByIdAndUpdate(prevTurn.id, {
-            hasEnded: true,
-            endDate: Date.now(),
-        });
-        yield (0, utils_1.addUncompletedTurns)(prevTurn, newTurn);
-        yield prevTurn.save();
+        if (userFounded.currentTurn) {
+            userFounded.currentTurn = newTurn._id;
+        }
+        if (prevTurn) {
+            prevTurn.hasEnded = true;
+            prevTurn.endDate = new Date(Date.now());
+            yield (0, utils_1.addUncompletedTurns)(prevTurn, newTurn);
+            yield prevTurn.save();
+        }
         yield newTurn.save();
         yield userFounded.save();
         res.status(200).send({

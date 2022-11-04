@@ -2,9 +2,6 @@ import { Request, Response } from "express";
 import UserModel from "../models/User.model";
 import TownModel from "../models/Town.model";
 import TurnModel from "../models/Turn.model";
-import { UserDocumentInterface } from "../types/user.types";
-import { TownSchemaInterface } from "../types/town.types";
-import { ClientSchemaInterface } from "../types/client.types";
 import ClientModel from "../models/Client.model";
 import OrderModel from "../models/Order.model";
 export const signup = async (req: Request, res: Response) => {
@@ -101,7 +98,7 @@ export const getUser = async (req: Request, res: Response) => {
     await user.populate({
       path: "currentTurn",
       populate: {
-        path: "orders",
+        path: "orders expenses",
       },
     });
     res.status(200).send({

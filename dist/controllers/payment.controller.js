@@ -16,28 +16,60 @@ exports.getAllPayments = exports.createPayment = void 0;
 const utils_1 = require("../utils");
 const Payment_model_1 = __importDefault(require("../models/Payment.model"));
 const Order_model_1 = __importDefault(require("../models/Order.model"));
+const Turn_model_1 = __importDefault(require("../models/Turn.model"));
 const createPayment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
         if ((0, utils_1.isEmpty)(req.body)) {
-            return res.json(400).send({ message: "Por favor, rellene los campos" });
+            return res.json(400).send({ message: 'Por favor, rellene los campos' });
         }
         const currentOrder = yield Order_model_1.default.findById(id);
-        if (!currentOrder) {
+        if (!currentOrder)
             return res.status(404).send({ message: "Can't find order" });
-        }
         const newPayment = new Payment_model_1.default(req.body);
+        const currentTurn = yield Turn_model_1.default.findById(currentOrder.turn_id);
+        const previousTotal = currentTurn.orders.find((order) => order._id.toString() === currentOrder._id.toString()).total;
+        if (req.body.amount > previousTotal)
+            return res
+                .status(400)
+                .json({ message: 'No puedes pagar más de lo que se debe' });
         currentOrder.payments = [...currentOrder.payments, newPayment];
+        currentOrder.total = previousTotal - newPayment.amount;
+        if (!currentTurn) {
+            return res.status(404).json({ message: 'Turn not found' });
+        }
+        currentTurn.orders = [
+            ...currentTurn.orders
+                .filter((order) => {
+                if (order.total === 0)
+                    return false;
+                if (order._id.toString() === currentOrder._id.toString()) {
+                    order.total = previousTotal - newPayment.amount;
+                    //          order.quantity = 0;
+                }
+                //order.payments = [];
+                return true;
+            })
+                .map((order) => {
+                if (order._id.toString() === currentOrder._id.toString()) {
+                    order.payments = [...order.payments, newPayment];
+                    return order;
+                }
+                return order;
+            }),
+        ];
+        yield currentTurn.save();
         yield currentOrder.save();
         res.status(200).send({
-            message: "Pago creado exitosamente",
+            message: 'Pago creado exitosamente',
             payment: {
                 newPayment,
             },
         });
     }
     catch (error) {
-        res.status(404).send({ message: "error" });
+        console.log(error);
+        res.status(404).send({ message: 'error' });
     }
 });
 exports.createPayment = createPayment;
@@ -45,17 +77,17 @@ const getAllPayments = (req, res) => __awaiter(void 0, void 0, void 0, function*
     try {
         const { id } = req.params;
         if (!id) {
-            return res.status(400).send({ message: "Ingresa un ID válido" });
+            return res.status(400).send({ message: 'Ingresa un ID vÃ¡lido' });
         }
         const order = yield Order_model_1.default.findById(id);
         if (!order) {
-            return res.status(400).send({ message: "No se encuentra el pedido" });
+            return res.status(400).send({ message: 'No se encuentra el pedido' });
         }
         const listOfPayments = order.payments;
         return res.status(200).send({ payments: listOfPayments });
     }
     catch (err) {
-        res.status(400).send({ message: "Error" });
+        res.status(400).send({ message: 'Error' });
     }
 });
 exports.getAllPayments = getAllPayments;
