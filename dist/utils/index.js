@@ -23,6 +23,7 @@ const addUncompletedTurns = (prevTurn, newTurn) => __awaiter(void 0, void 0, voi
             }, 0);
             if (order.total - totalPayed !== 0) {
                 order.total = order.total - totalPayed;
+                order.quantity = 0;
                 order.payments = [];
                 return true;
             }

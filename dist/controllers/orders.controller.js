@@ -30,7 +30,7 @@ const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             return res.status(401).send({ message: "Client no encontrado" });
         }
         const date = Date.now();
-        const newOrder = new Order_model_1.default(Object.assign(Object.assign({}, orderData), { date: date, total: orderData.quantity * orderData.valuePerOne }));
+        const newOrder = new Order_model_1.default(Object.assign(Object.assign({}, orderData), { date: date, total: orderData.quantity * orderData.valuePerOne, client: currentClient }));
         if (orderData.payment) {
             const newPayment = new Payment_model_1.default(orderData.payment);
             newOrder.payments = [newPayment];
