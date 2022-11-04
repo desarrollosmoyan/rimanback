@@ -98,7 +98,7 @@ export const getUser = async (req: Request, res: Response) => {
     await user.populate({
       path: "currentTurn",
       populate: {
-        path: "orders",
+        path: "orders expenses",
       },
     });
     res.status(200).send({

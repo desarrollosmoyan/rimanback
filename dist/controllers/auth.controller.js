@@ -110,7 +110,7 @@ const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         yield user.populate({
             path: "currentTurn",
             populate: {
-                path: "orders",
+                path: "orders expenses",
             },
         });
         res.status(200).send({

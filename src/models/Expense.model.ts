@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, ObjectId } from "mongoose";
 import {
   ExpenseDocumentInterface,
   ExpenseModelInterface,
