@@ -7,4 +7,5 @@ clientRouter.get("/", client_controller_1.getAllClients);
 clientRouter.post("/", client_controller_1.createNewClient);
 clientRouter.post("/:id", client_controller_1.createNewClientByTown);
 clientRouter.put("/:id", client_controller_1.updateClient);
+clientRouter.delete("/:id", client_controller_1.deleteClient);
 exports.default = clientRouter;

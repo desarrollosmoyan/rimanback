@@ -1,8 +1,12 @@
 import { Router } from "express";
-import { createExpense, getExpense } from "../controllers/expense.controller";
+import {
+  createExpense,
+  getExpense,
+  updateExpense,
+} from "../controllers/expense.controller";
 const expenseRouter = Router();
 
 expenseRouter.post("/:id", createExpense);
-expenseRouter.get("/:turnID/:expenseID", getExpense);
+expenseRouter.put("/:turnID/:expenseID", updateExpense);
 
 export default expenseRouter;
